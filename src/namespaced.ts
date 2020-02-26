@@ -1,27 +1,27 @@
 import {computed} from '@vue/composition-api';
 import {computedGetter, getAction, getMutation, Mapper, useMapping} from './util';
 
-function computedState(store, namespace: string, prop: string) {
+function computedState(store: any, namespace: string, prop: string) {
 	return computed(() => store.state[namespace][prop])
 }
 
-export function useNamespacedState(store, namespace: string, map: Mapper | Array<string>): { [key: string]: any } {
+export function useNamespacedState(store: any, namespace: string, map: Mapper | Array<string>): { [key: string]: any } {
 	return useMapping(store, null, map, computedState);
 }
 
-export function useNamespacedMutations(store, namespace: string, map: Mapper | Array<string>) {
+export function useNamespacedMutations(store: any, namespace: string, map: Mapper | Array<string>) {
 	return useMapping(store, namespace, map, getMutation);
 }
 
-export function useNamespacedActions(store, namespace: string, map: Mapper | Array<string>) {
+export function useNamespacedActions(store: any, namespace: string, map: Mapper | Array<string>) {
 	return useMapping(store, namespace, map, getAction);
 }
 
-export function useNamespacedGetters(store, namespace: string, map: Mapper | Array<string>): { [key: string]: any } {
+export function useNamespacedGetters(store: any, namespace: string, map: Mapper | Array<string>): { [key: string]: any } {
 	return useMapping(store, namespace, map, computedGetter);
 }
 
-export function createNamespacedHelpers(store, namespace) {
+export function createNamespacedHelpers(store: any, namespace: string) {
 	return {
 		useState: useNamespacedState.bind(null, [store, namespace]),
 		useMutations: useNamespacedMutations.bind(null, [store, namespace]),
