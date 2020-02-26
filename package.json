@@ -1,6 +1,6 @@
 {
   "name": "vuex-composition-helpers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Helpers to use Vuex store form Vue Composition API",
   "keywords": [
 	"vue",
