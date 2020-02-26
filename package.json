@@ -1,6 +1,6 @@
 {
  "name": "vuex-composition-helpers",
- "version": "1.0.1",
+ "version": "1.0.4",
  "description": "Helpers to use Vuex store form Vue Composition API",
  "keywords": [
   "vue",
@@ -9,6 +9,7 @@
  ],
  "main": "src/index.ts",
  "scripts": {
+   "prepublish": "npx tsc --build tsconfig.json",
   "test": "echo \"Error: no test specified\" && exit 1"
  },
  "repository": {
