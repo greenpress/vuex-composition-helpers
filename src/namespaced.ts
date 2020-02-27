@@ -23,9 +23,9 @@ export function useNamespacedGetters(store: any, namespace: string, map: Mapper 
 
 export function createNamespacedHelpers(store: any, namespace: string) {
 	return {
-		useState: useNamespacedState.bind(null, [store, namespace]),
-		useMutations: useNamespacedMutations.bind(null, [store, namespace]),
-		useActions: useNamespacedActions.bind(null, [store, namespace]),
-		useGetters: useNamespacedGetters.bind(null, [store, namespace]),
+		useState: useNamespacedState.bind(null, store, namespace),
+		useMutations: useNamespacedMutations.bind(null, store, namespace),
+		useActions: useNamespacedActions.bind(null, store, namespace),
+		useGetters: useNamespacedGetters.bind(null, store, namespace),
 	}
 }
