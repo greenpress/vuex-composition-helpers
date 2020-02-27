@@ -5,18 +5,18 @@ function computedState(store: any, prop: string) {
 	return computed(() => store.state[prop])
 }
 
-export function useState(store: any, map: Mapper | Array<string>): { [key: string]: any } {
+export function useState(store: any, map: Mapper | Array<string>): Mapper<any> {
 	return useMapping(store, null, map, computedState);
 }
 
-export function useGetters(store: any, map: Mapper | Array<string>): { [key: string]: any } {
+export function useGetters(store: any, map: Mapper | Array<string>): Mapper<any> {
 	return useMapping(store, null, map, computedGetter);
 }
 
-export function useMutations(store: any, map: Mapper | Array<string>): { [key: string]: Function } {
+export function useMutations(store: any, map: Mapper | Array<string>): Mapper<Function> {
 	return useMapping(store, null, map, getMutation);
 }
 
-export function useActions(store: any, map: Mapper | Array<string>): { [key: string]: Function } {
+export function useActions(store: any, map: Mapper | Array<string>): Mapper<Function> {
 	return useMapping(store, null, map, getAction);
 }

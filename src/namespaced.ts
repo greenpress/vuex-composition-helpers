@@ -5,19 +5,19 @@ function computedState(store: any, namespace: string, prop: string) {
 	return computed(() => store.state[namespace][prop])
 }
 
-export function useNamespacedState(store: any, namespace: string, map: Mapper | Array<string>): { [key: string]: any } {
+export function useNamespacedState(store: any, namespace: string, map: Mapper | Array<string>): Mapper<any> {
 	return useMapping(store, null, map, computedState);
 }
 
-export function useNamespacedMutations(store: any, namespace: string, map: Mapper | Array<string>) {
+export function useNamespacedMutations(store: any, namespace: string, map: Mapper | Array<string>): Mapper<Function> {
 	return useMapping(store, namespace, map, getMutation);
 }
 
-export function useNamespacedActions(store: any, namespace: string, map: Mapper | Array<string>) {
+export function useNamespacedActions(store: any, namespace: string, map: Mapper | Array<string>): Mapper<Function> {
 	return useMapping(store, namespace, map, getAction);
 }
 
-export function useNamespacedGetters(store: any, namespace: string, map: Mapper | Array<string>): { [key: string]: any } {
+export function useNamespacedGetters(store: any, namespace: string, map: Mapper | Array<string>): Mapper<any> {
 	return useMapping(store, namespace, map, computedGetter);
 }
 

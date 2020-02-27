@@ -1,7 +1,7 @@
 import {computed} from '@vue/composition-api';
 
-export interface Mapper {
-	[key: string]: string
+export interface Mapper<T = string> {
+	[key: string]: T
 }
 
 function useFromArray(store: any, namespace: string | null, props: Array<string>, cb: Function) {
@@ -21,19 +21,19 @@ function useFromObject(store: any, namespace: string | null, props: Mapper, cb: 
 	return obj;
 }
 
-export function computedGetter(store: any, prop: string) {
-	return computed(() => store.getters[prop])
+export function computedGetter<T = any>(store: any, prop: string) {
+	return computed<T>(() => store.getters[prop]);
 }
 
-export function getMutation(store: any, mutation: string) {
+export function getMutation(store: any, mutation: string): Function {
 	return function () {
-		return store.commit.apply(store, [mutation, ...arguments])
+		return store.commit.apply(store, [mutation, ...arguments]);
 	}
 }
 
-export function getAction(store: any, action: string) {
+export function getAction(store: any, action: string): Function {
 	return function () {
-		return store.dispatch.apply(store, [action, ...arguments])
+		return store.dispatch.apply(store, [action, ...arguments]);
 	}
 }
 

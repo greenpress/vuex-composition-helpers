@@ -7,6 +7,6 @@ export function wrapStore(store: any) {
 		useActions: useActions.bind(null, store),
 		useGetters: useGetters.bind(null, store),
 		useMutations: useMutations.bind(null, store),
-		useState: useState.bind(null, store),
+		useState: useState.bind(null, store)
 	}
 }
