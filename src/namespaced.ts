@@ -6,7 +6,7 @@ function computedState(store: any, namespace: string, prop: string) {
 }
 
 export function useNamespacedState(store: any, namespace: string, map: Mapper | Array<string>): Mapper<any> {
-	return useMapping(store, null, map, computedState);
+	return useMapping(store, namespace, map, computedState);
 }
 
 export function useNamespacedMutations(store: any, namespace: string, map: Mapper | Array<string>): Mapper<Function> {

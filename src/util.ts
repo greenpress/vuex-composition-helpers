@@ -4,9 +4,17 @@ export interface Mapper<T = string> {
 	[key: string]: T
 }
 
+function runCB(cb: Function, store: any, namespace: string | null, prop: string) {
+	if (cb.length === 3) { // choose which signature to pass to cb function
+		return cb(store, namespace, prop);
+	} else {
+		return cb(store, namespace ? `${namespace}/${prop}` : prop);
+	}
+}
+
 function useFromArray(store: any, namespace: string | null, props: Array<string>, cb: Function) {
 	return props.reduce((result, prop) => {
-		result[prop] = cb(store, namespace ? `${namespace}/${prop}` : prop);
+		result[prop] = runCB(cb, store, namespace, prop)
 		return result;
 	}, {} as any);
 }
@@ -15,7 +23,7 @@ function useFromObject(store: any, namespace: string | null, props: Mapper, cb: 
 	const obj: any = {};
 	for (let key in props) {
 		if (props.hasOwnProperty(key)) {
-			obj[key] = cb(store, namespace ? `${namespace}/${props[key]}` : props[key]);
+			obj[key] = runCB(cb, store, namespace, props[key]);
 		}
 	}
 	return obj;
