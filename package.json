@@ -1,34 +1,42 @@
 {
-  "name": "vuex-composition-helpers",
-  "version": "1.0.10",
-  "description": "Helpers to use Vuex store form Vue Composition API",
-  "keywords": [
-	"vue",
-	"vuex",
-	"composition-api",
-	"store",
-	"state management"
-  ],
-  "main": "src/index.ts",
-  "scripts": {
-	"prepublish": "npx tsc --build tsconfig.json",
-	"test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-	"type": "git",
-	"url": "git+https://github.com/greenpress/vuex-composition-helpers.git"
-  },
-  "author": "David Meir-Levy <davidmeirlevy@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-	"url": "https://github.com/greenpress/vuex-composition-helpers/issues"
-  },
-  "homepage": "https://github.com/greenpress/vuex-composition-helpers#readme",
-  "peerDependencies": {
-	"@vue/composition-api": ">= 0.4.0",
-	"vuex": ">= 3.0.0"
-  },
-  "devDependencies": {
-	"typescript": "^3.8.2"
-  }
+ "name": "vuex-composition-helpers",
+ "version": "1.0.10",
+ "description": "Helpers to use Vuex store form Vue Composition API",
+ "author": "David Meir-Levy <davidmeirlevy@gmail.com>",
+ "license": "MIT",
+ "keywords": [
+  "vue",
+  "vuex",
+  "composition-api",
+  "store",
+  "state management"
+ ],
+ "main": "src/index.ts",
+ "scripts": {
+  "prepublish": "npx tsc --build tsconfig.json",
+  "test": "jest"
+ },
+ "repository": {
+  "type": "git",
+  "url": "git+https://github.com/greenpress/vuex-composition-helpers.git"
+ },
+ "bugs": {
+  "url": "https://github.com/greenpress/vuex-composition-helpers/issues"
+ },
+ "homepage": "https://github.com/greenpress/vuex-composition-helpers#readme",
+ "peerDependencies": {
+  "@vue/composition-api": ">= 0.4.0",
+  "vuex": ">= 3.0.0"
+ },
+ "devDependencies": {
+  "@types/jest": "^25.2.1",
+  "@vue/composition-api": "^0.4.0",
+  "@vue/test-utils": "^1.0.0-beta.33",
+  "jest": "^25.3.0",
+  "ts-jest": "^25.3.1",
+  "typescript": "^3.8.2",
+  "vue": "^2.6.11",
+  "vue-template-compiler": "^2.6.11",
+  "vuex": "^3.1.3"
+ }
 }
