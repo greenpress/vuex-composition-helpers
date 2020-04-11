@@ -18,9 +18,9 @@ export default {
 	props: {
 		articleId: String
 	},
-	setup(props, { root }) {
-		const { fetch } = useActions(root.store, ['fetch']);
-		const { article, comments } = useState(root.store, ['article', 'comments']);
+	setup(props) {
+		const { fetch } = useActions(['fetch']);
+		const { article, comments } = useState(['article', 'comments']);
 		fetch(props.articleId); // dispatch the "fetch" action
 
 		return {

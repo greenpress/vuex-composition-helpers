@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+	"target": "esnext",
+	"module": "esnext",
+	"strict": true,
+	"esModuleInterop": true,
+	"forceConsistentCasingInFileNames": true,
+	"outDir": "./dist",
+	"sourceMap": true,
+	"skipLibCheck": true,
+	"isolatedModules": true,
+	"moduleResolution": "node"
+  },
+  "include": [
+	"src/*.ts",
+	"tests/*.ts"
+  ]
+}
