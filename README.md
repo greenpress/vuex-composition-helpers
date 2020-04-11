@@ -1,4 +1,5 @@
 # vuex-composition-helpers
+[![Codefresh build status]( https://g.codefresh.io/api/badges/pipeline/greenpress/vuex-composition-helpers%2Ftest?type=cf-1)]( https%3A%2F%2Fg.codefresh.io%2Fpipelines%2Ftest%2Fbuilds%3Ffilter%3Dtrigger%3Abuild~Build%3Bpipeline%3A5e915b7d4c3d6b0fd35ac83d~test)
 
 A util package to use Vuex with Composition API easily.
 
