@@ -38,13 +38,13 @@ export default {
 
 ```js
 import { createNamespacedHelpers } from 'vuex-composition-helpers';
+const { useState, useActions } = createNamespacedHelpers('articles'); // specific module name
 
 export default {
 	props: {
 		articleId: String
 	},
-	setup(props, { root }) {
-		const { useState, useActions } = createNamespacedHelpers(root.store, 'articles'); // specific module name
+	setup(props) {
 		const { fetch } = useActions(['fetch']);
 		const { article, comments } = useState(['article', 'comments']);
 		fetch(props.articleId); // dispatch the "fetch" action
@@ -90,7 +90,7 @@ consider separate the store composition file from the store usage inside the com
 ```js
 // store-composition.js:
 import { wrapStore } from 'vuex-composition-helpers';
-import store from '../store'; // local store file
+import store from '@/store'; // local store file
 
 export default wrapStore(store);
 ```

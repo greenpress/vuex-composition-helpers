@@ -1,5 +1,4 @@
 import {computed, getCurrentInstance} from '@vue/composition-api';
-import {Store} from 'vuex';
 
 export interface Mapper<T = string> {
 	[key: string]: T
