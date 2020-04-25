@@ -1,4 +1,46 @@
-import {computed, getCurrentInstance} from '@vue/composition-api';
+import { computed, getCurrentInstance, Ref } from '@vue/composition-api';
+
+declare type OmitFirstArg<F, TReturn> =
+	F extends (x: any, ...args: infer P) => any
+	? (...args: P) => TReturn
+	: never;
+
+declare type InferType<T, TUnknown = any> =
+	T extends (...args: any) => any
+	? OmitFirstArg<T, ReturnType<T>>
+	: T extends unknown
+	? TUnknown
+	: T;
+
+declare type InferGetterType<T> =
+	T extends (...args: any) => any
+	? ReturnType<T>
+	: any;
+
+export declare type ExtractTypes<O, TUnknown = any> = {
+	readonly [K in keyof O]: InferType<O[K], TUnknown>;
+};
+
+export declare type ExtractGetterTypes<O> = {
+	readonly [K in keyof O]: Ref<InferGetterType<O[K]>>;
+};
+
+export declare type KnownKeys<T> = {
+	[K in keyof T]: string extends K
+	? any
+	: number extends K
+	? any
+	: K
+} extends {
+		[_ in keyof T]: infer U
+	}
+	? U
+	: any;
+
+export declare type RefTypes<T> = {
+	readonly [Key in keyof T]: Ref<T[Key]>
+}
+
 
 export interface Mapper<T = string> {
 	[key: string]: T
@@ -6,7 +48,7 @@ export interface Mapper<T = string> {
 
 export type MapArgument = Mapper | Array<string>;
 
-function runCB(cb: Function, store: any, namespace: string | null, prop: string) {
+function runCB<T>(cb: Function, store: any, namespace: string | null, prop: KnownKeys<T> | string) {
 	if (cb.length === 3) { // choose which signature to pass to cb function
 		return cb(store, namespace, prop);
 	} else {
@@ -21,7 +63,7 @@ function useFromArray(store: any, namespace: string | null, props: Array<string>
 	}, {} as any);
 }
 
-function useFromObject(store: any, namespace: string | null, props: Mapper, cb: Function) {
+function useFromObject<T>(store: any, namespace: string | null, props: KnownKeys<T>[], cb: Function) {
 	const obj: any = {};
 	for (let key in props) {
 		if (props.hasOwnProperty(key)) {
@@ -47,17 +89,17 @@ export function getAction(store: any, action: string): Function {
 	}
 }
 
-export function useMapping(store: any, namespace: string | null, map: Mapper | Array<string> | undefined, cb: Function) {
+export function useMapping<T>(store: any, namespace: string | null, map: KnownKeys<T>[] | Array<string> | undefined, cb: Function) {
 	if (!map) {
 		return {};
 	}
 	if (map instanceof Array) {
-		return useFromArray(store, namespace, map, cb);
+		return useFromArray(store, namespace, map as Array<string>, cb);
 	}
 	return useFromObject(store, namespace, map, cb);
 }
 
-export function getStoreFromInstance<T = any>() {
+export function getStoreFromInstance() {
 	const vm = getCurrentInstance();
 	if (!vm) {
 		throw new Error('You must use this function within the "setup()" method, or insert the store as first argument.')

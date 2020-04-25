@@ -36,6 +36,33 @@ describe('"useState" - global store state helpers', () => {
 			expect(wrapper.text()).toBe(store.state.val);
 		});
 
+		it('should render component using a typed state value', () => {
+			interface RootState {
+				val: string;
+				num: number;
+			};
+			const store = new Vuex.Store<RootState>({
+				state: {
+					val: 'test-demo' + Math.random(),
+					num: 3
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{stateVal}}</div>',
+					setup() {
+						const {val} = useState<RootState>(store, ['val']);
+						return {
+							stateVal: val
+						}
+					}
+				},
+				{localVue}
+			);
+
+			expect(wrapper.text()).toBe(store.state.val);
+		});
+
 		it('should change component contents according a state change', async () => {
 			const store = new Vuex.Store({
 				state: {
@@ -118,6 +145,31 @@ describe('"useState" - global store state helpers', () => {
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useState(['val']);
+						return {
+							stateVal: val
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			expect(wrapper.text()).toBe(store.state.val);
+		});
+
+		it('should render component using a typed state value', () => {
+			interface RootState {
+				val: string,
+			};
+			const store = new Vuex.Store({
+				state: {
+					val: 'test-demo' + Math.random()
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{stateVal}}</div>',
+					setup() {
+						const {val} = useState<RootState>(['val']);
 						return {
 							stateVal: val
 						}
