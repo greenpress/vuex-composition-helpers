@@ -142,6 +142,53 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 			expect(mutate).toBeCalledTimes(1);
 			expect(mutate).toBeCalledWith(clickValue);
 		});
+
+		it('should dispatch action with given payload', () => {
+			const clickValue = 'demo-click-' + Math.random();
+			const mutate = jest.fn();
+			interface Mutations {
+				doTest: (state: any, payload: string) => void;
+			}
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				},
+				mutations: {
+					doTest: (state, payload) => {
+						state.val = payload;
+						mutate(payload);
+					}
+				}
+			};
+			const store = new Vuex.Store({
+				state: {},
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: `<div @click="onClicked">click</div>`,
+					setup() {
+						const {doTest} = useNamespacedMutations<Mutations>('foo', ['doTest']);
+						const onClicked = () => doTest(clickValue);
+						return {
+							onClicked,
+							doTest
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			expect(mutate).not.toBeCalled();
+
+			wrapper.find('div').trigger('click');
+
+			expect(mutate).toBeCalledTimes(1);
+			expect(mutate).toBeCalledWith(clickValue);
+		});
 	});
 
 });
