@@ -41,7 +41,38 @@ describe('"useNamespacedState" - namespaced store state helpers', () => {
 
 			expect(wrapper.text()).toBe(storeModule.state.val);
 		});
+		
+		it('should render component using a typed state value', () => {
+			interface ModuleState {
+				val: string
+			};
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				}
+			};
+			const store = new Vuex.Store({
+				modules: {
+					foo: storeModule
+				}
+			});
 
+			const wrapper = shallowMount({
+					template: '<div>{{stateVal}}</div>',
+					setup() {
+						const {val} = useNamespacedState<ModuleState>(store, 'foo', ['val']);
+						return {
+							stateVal: val
+						}
+					}
+				},
+				{localVue}
+			);
+
+			expect(wrapper.text()).toBe(storeModule.state.val);
+		});
+		
 		it('should change component contents according a state change', async () => {
 			const storeModule: Module<any, any> = {
 				namespaced: true,
@@ -142,6 +173,36 @@ describe('"useNamespacedState" - namespaced store state helpers', () => {
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useNamespacedState(undefined, 'foo', ['val']);
+						return {
+							stateVal: val
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			expect(wrapper.text()).toBe(storeModule.state.val);
+		});
+		it('should render component using a typed state value', () => {
+			interface ModuleState {
+				val: string;
+			};
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				}
+			};
+			const store = new Vuex.Store({
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{stateVal}}</div>',
+					setup() {
+						const {val} = useNamespacedState<ModuleState>(undefined, 'foo', ['val']);
 						return {
 							stateVal: val
 						}

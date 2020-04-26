@@ -45,6 +45,40 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 			expect(wrapper.text()).toBe(value);
 		});
 
+		it('should render component using a typed state getter', () => {
+			interface Getters {
+				valGetter: (state: any) => String;
+			};
+			const value = 'getter-demo' + Math.random();
+
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				getters: {
+					valGetter: () => value
+				}
+			};
+			const store = new Vuex.Store({
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{valGetter}}</div>',
+					setup() {
+						const {valGetter} = useNamespacedGetters<Getters>(store, 'foo', ['valGetter']);
+						return {
+							valGetter
+						}
+					}
+				},
+				{localVue}
+			);
+
+			expect(wrapper.text()).toBe(store.getters['foo/valGetter']);
+			expect(wrapper.text()).toBe(value);
+		});
+
 		it('should change component contents according a getter change', async () => {
 			const storeModule: Module<any, any> = {
 				namespaced: true,
@@ -108,6 +142,53 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useNamespacedGetters(store, 'foo', ['testGetter']);
+
+						watch(testGetter, watcher);
+
+						return {
+							val: testGetter
+						}
+					}
+				},
+				{localVue}
+			);
+			expect(watcher).toBeCalledTimes(1);
+
+
+			storeModule.state.val = 'new value' + Math.random();
+
+			expect(watcher).toBeCalledTimes(1);
+
+			// wait for rendering
+			await wrapper.vm.$nextTick();
+
+			expect(watcher).toBeCalledTimes(2);
+		});
+
+		it('should trigger a watcher according a typed getter change', async () => {
+			const watcher = jest.fn();
+			interface Getters {
+				testGetter: (state: any) => String;
+			};
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				},
+				getters: {
+					testGetter: (state) => state.val
+				}
+			};
+			const store = new Vuex.Store({
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{val}}</div>',
+					setup() {
+						const {testGetter} = useNamespacedGetters<Getters>(store, 'foo', ['testGetter']);
 
 						watch(testGetter, watcher);
 

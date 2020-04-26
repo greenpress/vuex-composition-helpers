@@ -4,7 +4,7 @@ import {shallowMount} from '@vue/test-utils';
 
 import {getLocalVue} from './utils/local-vue';
 import {useGetters} from '../src/global';
-import {watch} from '@vue/composition-api';
+import {watch, computed} from '@vue/composition-api';
 
 describe('"useGetters" - global store getters helpers', () => {
 	let localVue: typeof Vue;
@@ -35,6 +35,87 @@ describe('"useGetters" - global store getters helpers', () => {
 			);
 
 			expect(wrapper.text()).toBe(store.getters['valGetter']);
+		});
+
+		it('should render component using a state getter with params', () => {
+			const value = 'getter-demo' + Math.random();
+			const store = new Vuex.Store({
+				getters: {
+					valGetter: (state) => (prefix: string) => `${prefix}${value}`
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: `<div>{{valGetter('Foobar')}}</div>`,
+					setup() {
+						const {valGetter} = useGetters(store, ['valGetter']);
+						return {
+							valGetter
+						}
+					}
+				},
+				{localVue}
+			);
+
+			expect(wrapper.text()).toBe(store.getters['valGetter']('Foobar'));
+		});
+
+		it('should render component using a typed state getter', () => {
+			interface Getters {
+				valGetter: (state: any) => String;
+			};
+
+			const value = 'getter-demo' + Math.random();
+			const store = new Vuex.Store({
+				getters: {
+					valGetter: (state) => value
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{valGetter}}</div>',
+					setup() {
+						const {valGetter} = useGetters<Getters>(store, ['valGetter']);
+						return {
+							valGetter
+						}
+					}
+				},
+				{localVue}
+			);
+
+			expect(wrapper.text()).toBe(store.getters['valGetter']);
+		});
+
+		it('should render component using a typed state getter with params', () => {
+			interface Getters {
+				valGetter: (state: any) => (_: string) => string;
+			};
+
+			const value = 'getter-demo' + Math.random();
+			const store = new Vuex.Store({
+				state: {
+					val: value
+				},
+				getters: {
+					valGetter: (state) => (prefix: string) => `${prefix}${state.val}`
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: `<div>{{val}}</div>`,
+					setup() {
+						const {valGetter} = useGetters<Getters>(store, ['valGetter']);
+						const val = computed(() => valGetter.value('Foobar'))
+						return {
+							val
+						}
+					}
+				},
+				{localVue}
+			);
+
+			expect(wrapper.text()).toBe(store.getters['valGetter']('Foobar'));
 		});
 
 		it('should change component contents according a getter change', async () => {
@@ -89,6 +170,48 @@ describe('"useGetters" - global store getters helpers', () => {
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useGetters(store, ['testGetter']);
+
+						watch(testGetter, watcher);
+
+						return {
+							val: testGetter
+						}
+					}
+				},
+				{localVue}
+			);
+			expect(watcher).toBeCalledTimes(1);
+
+
+			store.state.val = 'new value' + Math.random();
+
+			expect(watcher).toBeCalledTimes(1);
+
+			// wait for rendering
+			await wrapper.vm.$nextTick();
+
+			expect(watcher).toBeCalledTimes(2);
+		});
+
+		it('should trigger a watcher according a typed getter change', async () => {
+			const watcher = jest.fn();
+			interface Getters {
+				testGetter: (state: any) => String;
+			};
+
+			const store = new Vuex.Store({
+				state: {
+					val: 'test-demo' + Math.random()
+				},
+				getters: {
+					testGetter: (state) => state.val
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{val}}</div>',
+					setup() {
+						const {testGetter} = useGetters<Getters>(store, ['testGetter']);
 
 						watch(testGetter, watcher);
 

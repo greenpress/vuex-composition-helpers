@@ -86,6 +86,50 @@ describe('"useMutations" - global store mutations helpers', () => {
 			expect(mutate).toBeCalledWith(clickValue);
 			expect(store.state.val).toBe(clickValue);
 		});
+
+		it('should commit a typed mutation with given payload', () => {
+			const clickValue = 'demo-click-' + Math.random();
+			const mutate = jest.fn();
+
+			interface Mutations {
+				change: (state: any, payload: string) => void;
+			}
+
+			const store = new Vuex.Store({
+				state: {
+					val: 'test-demo' + Math.random()
+				},
+				mutations: {
+					change: (state, payload) => {
+						state.val = payload;
+						mutate(payload);
+					}
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: `<div @click="onClicked">click</div>`,
+					setup() {
+						const {change} = useMutations<Mutations>(['change']);
+						const onClicked = () => change(clickValue);
+
+						return {
+							onClicked,
+							change
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			expect(mutate).not.toBeCalled();
+
+			wrapper.find('div').trigger('click');
+
+			expect(mutate).toBeCalledTimes(1);
+			expect(mutate).toBeCalledWith(clickValue);
+			expect(store.state.val).toBe(clickValue);
+		});
 	})
 
 });
