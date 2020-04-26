@@ -64,7 +64,7 @@ export function useNamespacedGetters<TGetters = any>(storeOrNamespace: Store<any
 	return useMapping(store, namespace, map, computedGetter);
 }
 
-export function createNamespacedHelpers<TState = any, TMutations = any, TActions = any, TGetters = any>(storeOrNamespace: Store<any> | string, namespace?: string):{
+export function createNamespacedHelpers<TState = any, TGetters = any, TActions = any, TMutations = any>(storeOrNamespace: Store<any> | string, namespace?: string):{
 	useState: (map?: KnownKeys<TState>[]) => RefTypes<TState>;
 	useGetters: (map?: KnownKeys<TGetters>[]) => ExtractGetterTypes<TGetters>;
 	useMutations: (map?: KnownKeys<TMutations>[]) => ExtractTypes<TMutations, Function>;
