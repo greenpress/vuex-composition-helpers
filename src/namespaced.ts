@@ -1,5 +1,5 @@
 import {computed} from '@vue/composition-api';
-import {computedGetter, getAction, getMutation, getStoreFromInstance, MapArgument, Mapper, useMapping, KnownKeys, RefTypes, ExtractTypes, ExtractGetterTypes} from './util';
+import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, KnownKeys, RefTypes, ExtractTypes, ExtractGetterTypes} from './util';
 import {Store} from 'vuex';
 
 export type Nullish = null | undefined;

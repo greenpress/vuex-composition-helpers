@@ -41,13 +41,6 @@ export declare type RefTypes<T> = {
 	readonly [Key in keyof T]: Ref<T[Key]>
 }
 
-
-export interface Mapper<T = string> {
-	[key: string]: T
-}
-
-export type MapArgument = Mapper | Array<string>;
-
 function runCB<T>(cb: Function, store: any, namespace: string | null, prop: KnownKeys<T> | string) {
 	if (cb.length === 3) { // choose which signature to pass to cb function
 		return cb(store, namespace, prop);
