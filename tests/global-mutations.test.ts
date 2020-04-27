@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, { MutationTree } from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
 import {getLocalVue} from './utils/local-vue';
@@ -91,7 +91,7 @@ describe('"useMutations" - global store mutations helpers', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const mutate = jest.fn();
 
-			interface Mutations {
+			interface Mutations extends MutationTree<any> {
 				change: (state: any, payload: string) => void;
 			}
 

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, { ActionTree } from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
 import {getLocalVue} from './utils/local-vue';
@@ -87,7 +87,7 @@ describe('"useActions" - global store actions helpers', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const dispatcher = jest.fn();
 
-			interface Actions {
+			interface Actions extends ActionTree<any, any> {
 				doTest: (ctx: any, payload: string) => void
 			}
 
