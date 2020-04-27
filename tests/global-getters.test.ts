@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, { GetterTree } from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
 import {getLocalVue} from './utils/local-vue';
@@ -195,7 +195,7 @@ describe('"useGetters" - global store getters helpers', () => {
 
 		it('should trigger a watcher according a typed getter change', async () => {
 			const watcher = jest.fn();
-			interface Getters {
+			interface Getters extends GetterTree<any, any> {
 				testGetter: (state: any) => String;
 			};
 
