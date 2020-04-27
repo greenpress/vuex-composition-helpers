@@ -27,15 +27,15 @@ export declare type ExtractGetterTypes<O> = {
 
 export declare type KnownKeys<T> = {
 	[K in keyof T]: string extends K
-	? any
+	? never
 	: number extends K
-	? any
+	? never
 	: K
 } extends {
 		[_ in keyof T]: infer U
 	}
 	? U
-	: any;
+	: never;
 
 export declare type RefTypes<T> = {
 	readonly [Key in keyof T]: Ref<T[Key]>
