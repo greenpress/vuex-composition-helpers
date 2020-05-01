@@ -12,6 +12,8 @@
   "state management"
  ],
  "main": "src/index.ts",
+ "browser": "dist/index.js",
+ "typings": "dist/types/index.d.ts",
  "scripts": {
   "prepublish": "npx tsc --build tsconfig.json",
   "test": "jest"
