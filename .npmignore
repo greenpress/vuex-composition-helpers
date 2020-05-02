@@ -1,4 +1,3 @@
 node_modules
 tests
 .idea/
-yarn.lock
