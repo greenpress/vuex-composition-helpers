@@ -1,6 +1,6 @@
 {
  "name": "vuex-composition-helpers",
- "version": "1.0.15",
+ "version": "1.0.16",
  "description": "Helpers to use Vuex store form Vue Composition API",
  "author": "David Meir-Levy <davidmeirlevy@gmail.com>",
  "license": "MIT",
@@ -15,7 +15,7 @@
  "browser": "dist/index.js",
  "typings": "dist/types/index.d.ts",
  "scripts": {
-  "prepublish": "npx tsc --build tsconfig.json",
+  "prepublish": "npm run test && npx tsc --build tsconfig.json",
   "test": "jest"
  },
  "repository": {
