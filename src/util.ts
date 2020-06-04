@@ -1,21 +1,21 @@
-import { computed, getCurrentInstance, Ref } from '@vue/composition-api';
+import {computed, getCurrentInstance, Ref} from '@vue/composition-api';
 
 declare type OmitFirstArg<F, TReturn> =
 	F extends (x: any, ...args: infer P) => any
-	? (...args: P) => TReturn
-	: never;
+		? (...args: P) => TReturn
+		: never;
 
 declare type InferType<T, TUnknown = any> =
 	T extends (...args: any) => any
-	? OmitFirstArg<T, ReturnType<T>>
-	: T extends unknown
-	? TUnknown
-	: T;
+		? OmitFirstArg<T, ReturnType<T>>
+		: T extends unknown
+		? TUnknown
+		: T;
 
 declare type InferGetterType<T> =
 	T extends (...args: any) => any
-	? ReturnType<T>
-	: any;
+		? ReturnType<T>
+		: any;
 
 export declare type ExtractTypes<O, TUnknown = any> = {
 	readonly [K in keyof O]: InferType<O[K], TUnknown>;
@@ -27,10 +27,10 @@ export declare type ExtractGetterTypes<O> = {
 
 export declare type KnownKeys<T> = {
 	[K in keyof T]: string extends K
-	? never
-	: number extends K
-	? never
-	: K
+		? (T extends any ? any : never)
+		: number extends K
+			? never
+			: K
 } extends {
 		[_ in keyof T]: infer U
 	}
