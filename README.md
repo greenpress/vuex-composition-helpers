@@ -11,6 +11,14 @@ A util package to use Vuex with Composition API easily.
 $ npm install vuex-composition-helpers
 ```
 
+This library is not transpiled by default. Your project should transpile it, which makes the final build smaller and more tree-shakeable. Take a look at [transpiling](#transpiling).
+
+Non-typescript projects may import the library from the `dist` subdirectory, where plain javascript distribution files are located.
+
+```
+import { useState, ... } from 'vuex-composition-helpers/dist';
+```
+
 ### Basic Usage Examples
 
 ```js
@@ -119,7 +127,7 @@ export default {
 
 ### Advanced Usage Example
 
-consider separate the store composition file from the store usage inside the component. i.g.:
+Consider separate the store composition file from the store usage inside the component. i.g.:
 
 ```js
 // store-composition.js:
@@ -151,5 +159,77 @@ export default {
 	}
 }
 ```
+
+### Transpiling
+
+It depends on you project's stack, but let's say it consists of webpack, babel and ts-loader.
+
+The rule processing `.ts` files should whitelist vuex-composition-helpers. If your project uses a raw webpack installation, it should resemble this.
+
+```
+// webpack.config.js
+module.exports = {
+  ...
+  module: {
+    rules: [
+      test: /\.ts$/,
+      // If node_modules is excluded from the rule, vuex-composition-helpers should be an exception
+      exclude: /node_modules(?!\/vuex-composition-helpers)/,
+      use: [
+        {
+          loader: 'babel-loader',
+          ...
+        },
+        {
+          loader: 'thread-loader',
+          options: { ... }
+        },
+        {
+          loader: 'ts-loader',
+          ...
+        }
+    ]
+  }
+}
+```
+
+When using `vue-cli`, use this instead
+
+```
+// vue.config.js
+module.exports = {
+  ...
+  chainWebpack: config => {
+    config
+      .rule('ts')
+      .include
+      .add(/vuex-composition-helpers/)
+  }
+}
+```
+
+If your webpack configuration is excluding `node_modules` from the bundle, which is common for SSR, this library should be an exception.
+
+```
+// webpack.config.js
+module.exports = {
+ ...
+  externals: [nodeExternals({
+    whitelist: [/^vuex-composition-helpers/]
+  })],
+}
+```
+
+Babel should not `exclude` or `ignore` this library. If you use `vue-cli`, you may need the following configuration.
+
+```
+// vue.config.js
+module.exports = {
+  ...
+  transpileDependencies: ['vuex-composition-helpers'],
+}
+```
+
+Although it's not strictly required, maybe ts-loader needs to have `allowTsInNodeModules` enabled in your project. Finally check that this library is not excluded in `tsconfig.json`, and if it was necessary, put it in the `include` list.
 
 Enjoy!
