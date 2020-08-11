@@ -166,7 +166,7 @@ It depends on you project's stack, but let's say it consists of webpack, babel a
 
 The rule processing `.ts` files should whitelist vuex-composition-helpers. If your project uses a raw webpack installation, it should resemble this.
 
-```
+```js
 // webpack.config.js
 module.exports = {
   ...
@@ -195,7 +195,7 @@ module.exports = {
 
 When using `vue-cli`, use this instead
 
-```
+```js
 // vue.config.js
 module.exports = {
   ...
@@ -222,7 +222,7 @@ module.exports = {
 
 Babel should not `exclude` or `ignore` this library. If you use `vue-cli`, you may need the following configuration.
 
-```
+```js
 // vue.config.js
 module.exports = {
   ...
