@@ -1,6 +1,6 @@
 # vuex-composition-helpers
 
-![badge](https://action-badges.now.sh/greenpress/vuex-composition-helpers)
+![CI](https://github.com/greenpress/vuex-composition-helpers/workflows/CI/badge.svg?branch=master)
 [![npm version](https://badge.fury.io/js/vuex-composition-helpers.svg)](https://badge.fury.io/js/vuex-composition-helpers)
 
 A util package to use Vuex with Composition API easily.
