@@ -14,6 +14,40 @@ describe('"useNamespacedState" - namespaced store state helpers', () => {
 	});
 
 	describe('when given store in arguments', () => {
+		it('should return a nested state value', () => {
+			const nestedStoreModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				}
+			};
+			const storeModule:Module<any, any> = {
+				namespaced: true,
+				modules: {
+					bar: nestedStoreModule
+				}
+			};
+			const store = new Vuex.Store({
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{stateVal}}</div>',
+					setup() {
+						const {val} = useNamespacedState(store, 'foo/bar', ['val']);
+						return {
+							stateVal: val
+						}
+					}
+				},
+				{localVue}
+			);
+
+			expect(wrapper.text()).toBe(nestedStoreModule.state.val);
+		});
+
 		it('should render component using a state value', () => {
 			const storeModule: Module<any, any> = {
 				namespaced: true,
