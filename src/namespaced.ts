@@ -5,7 +5,8 @@ import {Store} from 'vuex';
 export type Nullish = null | undefined;
 
 function computedState(store: any, namespace: string, prop: string) {
-	return computed(() => store.state[namespace][prop])
+	let module = namespace.split('/').reduce((module, key) => module[key], store.state) 
+	return computed(() => module[prop])
 }
 
 export function useNamespacedState<TState = any>(storeOrNamespace: Store<any> | string  | Nullish, namespaceOrMap: string | KnownKeys<TState>[], map?: KnownKeys<TState>[]): RefTypes<TState> {
