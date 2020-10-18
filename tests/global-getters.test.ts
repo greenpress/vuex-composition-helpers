@@ -1,18 +1,10 @@
-import Vue from 'vue';
 import Vuex, { GetterTree } from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useGetters} from '../src/global';
-import {watch, computed} from '@vue/composition-api';
+import {watch, computed} from 'vue';
 
 describe('"useGetters" - global store getters helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given both store and map', () => {
 		it('should render component using a state getter', () => {
 			const value = 'getter-demo' + Math.random();
@@ -24,6 +16,7 @@ describe('"useGetters" - global store getters helpers', () => {
 
 			const wrapper = shallowMount({
 					template: '<div>{{valGetter}}</div>',
+				  props: [],
 					setup() {
 						const {valGetter} = useGetters(store, ['valGetter']);
 						return {
@@ -31,7 +24,11 @@ describe('"useGetters" - global store getters helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['valGetter']);
@@ -54,7 +51,11 @@ describe('"useGetters" - global store getters helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['valGetter']('Foobar'));
@@ -81,7 +82,11 @@ describe('"useGetters" - global store getters helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['valGetter']);
@@ -112,7 +117,11 @@ describe('"useGetters" - global store getters helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['valGetter']('Foobar'));
@@ -137,7 +146,11 @@ describe('"useGetters" - global store getters helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			// original value
@@ -148,7 +161,7 @@ describe('"useGetters" - global store getters helpers', () => {
 			expect(wrapper.text()).not.toBe(store.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(store.state.val);
@@ -171,14 +184,18 @@ describe('"useGetters" - global store getters helpers', () => {
 					setup() {
 						const {testGetter} = useGetters(store, ['testGetter']);
 
-						watch(testGetter, watcher);
+						watch(testGetter, watcher, {immediate: true});
 
 						return {
 							val: testGetter
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 			expect(watcher).toBeCalledTimes(1);
 
@@ -188,7 +205,7 @@ describe('"useGetters" - global store getters helpers', () => {
 			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			expect(watcher).toBeCalledTimes(2);
 		});
@@ -213,14 +230,18 @@ describe('"useGetters" - global store getters helpers', () => {
 					setup() {
 						const {testGetter} = useGetters<Getters>(store, ['testGetter']);
 
-						watch(testGetter, watcher);
+						watch(testGetter, watcher, {immediate: true});
 
 						return {
 							val: testGetter
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 			expect(watcher).toBeCalledTimes(1);
 
@@ -230,7 +251,7 @@ describe('"useGetters" - global store getters helpers', () => {
 			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			expect(watcher).toBeCalledTimes(2);
 		});
@@ -254,7 +275,11 @@ describe('"useGetters" - global store getters helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['valGetter']);
@@ -279,7 +304,11 @@ describe('"useGetters" - global store getters helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			// original value
@@ -290,7 +319,7 @@ describe('"useGetters" - global store getters helpers', () => {
 			expect(wrapper.text()).not.toBe(store.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(store.state.val);
@@ -313,14 +342,18 @@ describe('"useGetters" - global store getters helpers', () => {
 					setup() {
 						const {testGetter} = useGetters(['testGetter']);
 
-						watch(testGetter, watcher);
+						watch(testGetter, watcher, {immediate: true});
 
 						return {
 							val: testGetter
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 			expect(watcher).toBeCalledTimes(1);
 
@@ -330,7 +363,7 @@ describe('"useGetters" - global store getters helpers', () => {
 			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			expect(watcher).toBeCalledTimes(2);
 		});

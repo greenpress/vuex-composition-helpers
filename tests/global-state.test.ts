@@ -1,18 +1,10 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useState} from '../src/global';
-import {watch} from '@vue/composition-api';
+import {watch} from 'vue';
 
 describe('"useState" - global store state helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given both store and map', () => {
 		it('should render component using a state value', () => {
 			const store = new Vuex.Store({
@@ -23,6 +15,7 @@ describe('"useState" - global store state helpers', () => {
 
 			const wrapper = shallowMount({
 					template: '<div>{{stateVal}}</div>',
+				  props: [],
 					setup() {
 						const {val} = useState(store, ['val']);
 						return {
@@ -30,7 +23,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.state.val);
@@ -57,7 +54,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.state.val);
@@ -79,7 +80,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			// original value
@@ -90,7 +95,7 @@ describe('"useState" - global store state helpers', () => {
 			expect(wrapper.text()).not.toBe(store.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(store.state.val);
@@ -109,14 +114,18 @@ describe('"useState" - global store state helpers', () => {
 					setup() {
 						const {val} = useState(store, ['val']);
 
-						watch(val, watcher);
+						watch(val, watcher, {immediate: true});
 
 						return {
 							stateVal: val
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(watcher).toBeCalledTimes(1);
@@ -126,7 +135,7 @@ describe('"useState" - global store state helpers', () => {
 			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			expect(watcher).toBeCalledTimes(2);
 
@@ -150,7 +159,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.state.val);
@@ -175,7 +188,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.state.val);
@@ -197,7 +214,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			// original value
@@ -208,7 +229,7 @@ describe('"useState" - global store state helpers', () => {
 			expect(wrapper.text()).not.toBe(store.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(store.state.val);
@@ -227,14 +248,18 @@ describe('"useState" - global store state helpers', () => {
 					setup() {
 						const {val} = useState( ['val']);
 
-						watch(val, watcher);
+						watch(val, watcher, {immediate: true});
 
 						return {
 							stateVal: val
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(watcher).toBeCalledTimes(1);
@@ -244,7 +269,7 @@ describe('"useState" - global store state helpers', () => {
 			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			expect(watcher).toBeCalledTimes(2);
 

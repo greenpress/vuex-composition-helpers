@@ -1,17 +1,9 @@
-import Vue from 'vue';
 import Vuex, {Module} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useNamespacedActions} from '../src/namespaced';
 
 describe('"useNamespacedActions" - namespaced store actions helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given store in arguments', () => {
 		it('should dispatch action with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
@@ -43,7 +35,11 @@ describe('"useNamespacedActions" - namespaced store actions helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -86,7 +82,11 @@ describe('"useNamespacedActions" - namespaced store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -129,7 +129,11 @@ describe('"useNamespacedActions" - namespaced store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -177,7 +181,11 @@ describe('"useNamespacedActions" - namespaced store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();

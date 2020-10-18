@@ -1,22 +1,14 @@
-import Vue from 'vue';
-import Vuex, { ActionTree } from 'vuex';
+import Vuex, {ActionTree, createStore} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useActions} from '../src/global';
 
 describe('"useActions" - global store actions helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given both store and map', () => {
 		it('should dispatch action with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const dispatcher = jest.fn();
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				},
@@ -29,6 +21,7 @@ describe('"useActions" - global store actions helpers', () => {
 
 			const wrapper = shallowMount({
 					template: '<div @click="doTest(\'' + clickValue + '\')">click</div>',
+				  props: [],
 					setup() {
 						const {doTest} = useActions(store, ['doTest']);
 						return {
@@ -36,7 +29,11 @@ describe('"useActions" - global store actions helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -72,7 +69,11 @@ describe('"useActions" - global store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -113,7 +114,11 @@ describe('"useActions" - global store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -155,13 +160,17 @@ describe('"useActions" - global store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
 
 			await (wrapper.vm as any).onClicked();
-			await wrapper.vm.$nextTick();
+			await (wrapper.vm as any).$nextTick();
 
 			expect(dispatcher).toBeCalledTimes(1);
 			expect(dispatcher).toBeCalledWith(store.state, clickValue);

@@ -1,17 +1,9 @@
-import Vue from 'vue';
 import Vuex, {Module} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useNamespacedMutations} from '../src/namespaced';
 
 describe('"useNamespacedMutations" - namespaced store mutations helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given store in arguments', () => {
 		it('should commit mutation with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
@@ -44,7 +36,11 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -88,7 +84,11 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -132,7 +132,11 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -179,7 +183,11 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();

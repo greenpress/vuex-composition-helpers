@@ -1,4 +1,4 @@
-import {computed, getCurrentInstance, Ref} from '@vue/composition-api';
+import {computed, getCurrentInstance, Ref} from 'vue';
 
 declare type OmitFirstArg<F, TReturn> =
 	F extends (x: any, ...args: infer P) => any
@@ -97,5 +97,5 @@ export function getStoreFromInstance() {
 	if (!vm) {
 		throw new Error('You must use this function within the "setup()" method, or insert the store as first argument.')
 	}
-	return vm.$store;
+	return vm.appContext.config.globalProperties.$store;
 }

@@ -1,17 +1,9 @@
-import Vue from 'vue';
 import Vuex, { MutationTree } from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useMutations} from '../src/global';
 
 describe('"useMutations" - global store mutations helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given both store and map', () => {
 		it('should commit mutation with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
@@ -37,7 +29,11 @@ describe('"useMutations" - global store mutations helpers', () => {
 						}
 					}
 				},
-				{localVue}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -75,7 +71,11 @@ describe('"useMutations" - global store mutations helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -119,7 +119,11 @@ describe('"useMutations" - global store mutations helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();

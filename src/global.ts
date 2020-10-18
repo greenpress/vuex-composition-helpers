@@ -1,5 +1,5 @@
 import {Store} from 'vuex/types';
-import {computed} from '@vue/composition-api';
+import {computed} from 'vue';
 import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, ExtractGetterTypes, ExtractTypes, KnownKeys, RefTypes} from './util';
 
 function computedState(store: any, prop: string) {
