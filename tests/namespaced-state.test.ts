@@ -75,7 +75,7 @@ describe('"useNamespacedState" - namespaced store state helpers', () => {
 
 			expect(wrapper.text()).toBe(storeModule.state.val);
 		});
-		
+
 		it('should render component using a typed state value', () => {
 			interface ModuleState {
 				val: string
@@ -106,7 +106,7 @@ describe('"useNamespacedState" - namespaced store state helpers', () => {
 
 			expect(wrapper.text()).toBe(storeModule.state.val);
 		});
-		
+
 		it('should change component contents according a state change', async () => {
 			const storeModule: Module<any, any> = {
 				namespaced: true,
@@ -175,16 +175,14 @@ describe('"useNamespacedState" - namespaced store state helpers', () => {
 				{localVue}
 			);
 
-			expect(watcher).toBeCalledTimes(1);
+			expect(watcher).toBeCalledTimes(0);
 
 			storeModule.state.val = 'new value' + Math.random();
-
-			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
 			await wrapper.vm.$nextTick();
 
-			expect(watcher).toBeCalledTimes(2);
+			expect(watcher).toBeCalledTimes(1);
 
 		});
 	});
@@ -316,16 +314,14 @@ describe('"useNamespacedState" - namespaced store state helpers', () => {
 				{localVue, store}
 			);
 
-			expect(watcher).toBeCalledTimes(1);
+			expect(watcher).toBeCalledTimes(0);
 
 			storeModule.state.val = 'new value' + Math.random();
-
-			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
 			await wrapper.vm.$nextTick();
 
-			expect(watcher).toBeCalledTimes(2);
+			expect(watcher).toBeCalledTimes(1);
 
 		});
 	});
@@ -428,16 +424,14 @@ describe('"useNamespacedState" - namespaced store state helpers', () => {
 				{localVue, store}
 			);
 
-			expect(watcher).toBeCalledTimes(1);
+			expect(watcher).toBeCalledTimes(0);
 
 			storeModule.state.val = 'new value' + Math.random();
-
-			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
 			await wrapper.vm.$nextTick();
 
-			expect(watcher).toBeCalledTimes(2);
+			expect(watcher).toBeCalledTimes(1);
 
 		});
 	});

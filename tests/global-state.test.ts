@@ -119,16 +119,14 @@ describe('"useState" - global store state helpers', () => {
 				{localVue}
 			);
 
-			expect(watcher).toBeCalledTimes(1);
+			expect(watcher).toBeCalledTimes(0);
 
 			store.state.val = 'new value' + Math.random();
-
-			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
 			await wrapper.vm.$nextTick();
 
-			expect(watcher).toBeCalledTimes(2);
+			expect(watcher).toBeCalledTimes(1);
 
 		});
 	})
@@ -237,16 +235,14 @@ describe('"useState" - global store state helpers', () => {
 				{localVue, store}
 			);
 
-			expect(watcher).toBeCalledTimes(1);
+			expect(watcher).toBeCalledTimes(0);
 
 			store.state.val = 'new value' + Math.random();
-
-			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
 			await wrapper.vm.$nextTick();
 
-			expect(watcher).toBeCalledTimes(2);
+			expect(watcher).toBeCalledTimes(1);
 
 		});
 	})
