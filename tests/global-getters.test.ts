@@ -180,17 +180,14 @@ describe('"useGetters" - global store getters helpers', () => {
 				},
 				{localVue}
 			);
-			expect(watcher).toBeCalledTimes(1);
-
+			expect(watcher).toBeCalledTimes(0);
 
 			store.state.val = 'new value' + Math.random();
-
-			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
 			await wrapper.vm.$nextTick();
 
-			expect(watcher).toBeCalledTimes(2);
+			expect(watcher).toBeCalledTimes(1);
 		});
 
 		it('should trigger a watcher according a typed getter change', async () => {
@@ -222,17 +219,14 @@ describe('"useGetters" - global store getters helpers', () => {
 				},
 				{localVue}
 			);
-			expect(watcher).toBeCalledTimes(1);
-
+			expect(watcher).toBeCalledTimes(0);
 
 			store.state.val = 'new value' + Math.random();
-
-			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
 			await wrapper.vm.$nextTick();
 
-			expect(watcher).toBeCalledTimes(2);
+			expect(watcher).toBeCalledTimes(1);
 		});
 	});
 
@@ -322,17 +316,14 @@ describe('"useGetters" - global store getters helpers', () => {
 				},
 				{localVue, store}
 			);
-			expect(watcher).toBeCalledTimes(1);
-
+			expect(watcher).toBeCalledTimes(0);
 
 			store.state.val = 'new value' + Math.random();
-
-			expect(watcher).toBeCalledTimes(1);
 
 			// wait for rendering
 			await wrapper.vm.$nextTick();
 
-			expect(watcher).toBeCalledTimes(2);
+			expect(watcher).toBeCalledTimes(1);
 		});
 	});
 });

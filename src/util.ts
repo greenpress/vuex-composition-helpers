@@ -97,5 +97,6 @@ export function getStoreFromInstance() {
 	if (!vm) {
 		throw new Error('You must use this function within the "setup()" method, or insert the store as first argument.')
 	}
-	return vm.$store;
+	const {$store} = 'proxy' in vm ? vm.proxy : vm;
+	return $store;
 }
