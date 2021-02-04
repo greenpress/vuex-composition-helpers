@@ -1,17 +1,9 @@
-import Vue from 'vue';
-import Vuex, {Module} from 'vuex';
+import {createStore, Module} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {createNamespacedHelpers} from '../src/namespaced';
 
 describe('"createNamespacedHelpers" - generic namespaced helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when created helpers outside of component', () => {
 		it('should get getters', () => {
 			const value = 'getter-demo' + Math.random();
@@ -22,7 +14,7 @@ describe('"createNamespacedHelpers" - generic namespaced helpers', () => {
 					valGetter: () => value
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
@@ -31,6 +23,7 @@ describe('"createNamespacedHelpers" - generic namespaced helpers', () => {
 			const {useGetters} = createNamespacedHelpers('foo');
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{valGetter}}</div>',
 					setup() {
 						const {valGetter} = useGetters(['valGetter']);
@@ -39,7 +32,11 @@ describe('"createNamespacedHelpers" - generic namespaced helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['foo/valGetter']);
@@ -50,6 +47,7 @@ describe('"createNamespacedHelpers" - generic namespaced helpers', () => {
 			interface ModuleGetter {
 				valGetter: string;
 			}
+
 			const value = 'getter-demo' + Math.random();
 
 			const storeModule: Module<any, any> = {
@@ -58,7 +56,7 @@ describe('"createNamespacedHelpers" - generic namespaced helpers', () => {
 					valGetter: () => value
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
@@ -67,6 +65,7 @@ describe('"createNamespacedHelpers" - generic namespaced helpers', () => {
 			const {useGetters} = createNamespacedHelpers<any, ModuleGetter>('foo');
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{valGetter}}</div>',
 					setup() {
 						const {valGetter} = useGetters(['valGetter']);
@@ -75,7 +74,11 @@ describe('"createNamespacedHelpers" - generic namespaced helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['foo/valGetter']);

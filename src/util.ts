@@ -1,4 +1,5 @@
-import {computed, getCurrentInstance, Ref} from '@vue/composition-api';
+import {computed, getCurrentInstance, Ref} from 'vue';
+import {Store} from 'vuex/types';
 
 declare type OmitFirstArg<F, TReturn> =
 	F extends (x: any, ...args: infer P) => any
@@ -92,11 +93,10 @@ export function useMapping<T>(store: any, namespace: string | null, map: KnownKe
 	return useFromObject(store, namespace, map, cb);
 }
 
-export function getStoreFromInstance() {
+export function getStoreFromInstance<T = any>() {
 	const vm = getCurrentInstance();
 	if (!vm) {
 		throw new Error('You must use this function within the "setup()" method, or insert the store as first argument.')
 	}
-	const {$store} = 'proxy' in vm ? vm.proxy : vm;
-	return $store;
+	return (vm.proxy as any)?.$store as Store<T>;
 }

@@ -1,22 +1,15 @@
-import Vue from 'vue';
-import Vuex, { MutationTree } from 'vuex';
+import {createStore, MutationTree} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useMutations} from '../src/global';
 
 describe('"useMutations" - global store mutations helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
 
 	describe('when given both store and map', () => {
 		it('should commit mutation with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const mutate = jest.fn();
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				},
@@ -29,6 +22,7 @@ describe('"useMutations" - global store mutations helpers', () => {
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div @click="change(\'' + clickValue + '\')">click</div>',
 					setup() {
 						const {change} = useMutations(store, ['change']);
@@ -37,7 +31,6 @@ describe('"useMutations" - global store mutations helpers', () => {
 						}
 					}
 				},
-				{localVue}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -54,7 +47,7 @@ describe('"useMutations" - global store mutations helpers', () => {
 		it('should commit mutation with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const mutate = jest.fn();
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				},
@@ -67,6 +60,7 @@ describe('"useMutations" - global store mutations helpers', () => {
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div @click="change(\'' + clickValue + '\')">click</div>',
 					setup() {
 						const {change} = useMutations(['change']);
@@ -75,7 +69,11 @@ describe('"useMutations" - global store mutations helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+								{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -95,7 +93,7 @@ describe('"useMutations" - global store mutations helpers', () => {
 				change: (state: any, payload: string) => void;
 			}
 
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				},
@@ -108,6 +106,7 @@ describe('"useMutations" - global store mutations helpers', () => {
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: `<div @click="onClicked">click</div>`,
 					setup() {
 						const {change} = useMutations<Mutations>(['change']);
@@ -119,7 +118,11 @@ describe('"useMutations" - global store mutations helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+								{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();

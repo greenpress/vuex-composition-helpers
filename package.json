@@ -1,44 +1,43 @@
 {
- "name": "vuex-composition-helpers",
- "version": "1.0.22",
- "description": "Helpers to use Vuex store form Vue Composition API",
- "author": "David Meir-Levy <davidmeirlevy@gmail.com>",
- "license": "MIT",
- "keywords": [
-  "vue",
-  "vuex",
-  "composition-api",
-  "store",
-  "state management"
- ],
- "main": "src/index.ts",
- "browser": "dist/index.js",
- "typings": "dist/types/index.d.ts",
- "scripts": {
-  "prepublish": "npm run test && npx tsc --build tsconfig.json",
-  "test": "jest"
- },
- "repository": {
-  "type": "git",
-  "url": "git+https://github.com/greenpress/vuex-composition-helpers.git"
- },
- "bugs": {
-  "url": "https://github.com/greenpress/vuex-composition-helpers/issues"
- },
- "homepage": "https://github.com/greenpress/vuex-composition-helpers#readme",
- "peerDependencies": {
-  "@vue/composition-api": ">= 0.4.0",
-  "vuex": ">= 3.0.0"
- },
- "devDependencies": {
-  "@types/jest": "^25.2.1",
-  "@vue/composition-api": "^1.0.0-beta.22",
-  "@vue/test-utils": "^1.0.0-beta.33",
-  "jest": "^25.3.0",
-  "ts-jest": "^25.3.1",
-  "typescript": "^3.8.2",
-  "vue": "^2.6.11",
-  "vue-template-compiler": "^2.6.11",
-  "vuex": "^3.1.3"
- }
+  "name": "vuex-composition-helpers",
+  "version": "2.0.0",
+  "description": "Helpers to use Vuex store form Vue Composition API",
+  "author": "David Meir-Levy <davidmeirlevy@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+	"vue",
+	"vuex",
+	"composition-api",
+	"store",
+	"state management"
+  ],
+  "main": "src/index.ts",
+  "browser": "dist/index.js",
+  "typings": "dist/types/index.d.ts",
+  "scripts": {
+	"prepublish": "npm run test && npx tsc --build tsconfig.json",
+	"test": "jest"
+  },
+  "repository": {
+	"type": "git",
+	"url": "git+https://github.com/greenpress/vuex-composition-helpers.git"
+  },
+  "bugs": {
+	"url": "https://github.com/greenpress/vuex-composition-helpers/issues"
+  },
+  "homepage": "https://github.com/greenpress/vuex-composition-helpers#readme",
+  "peerDependencies": {
+	"vuex": ">= 4.0.0",
+	"vue": ">= 3.0.5"
+  },
+  "devDependencies": {
+	"@types/jest": "^25.2.1",
+	"@vue/compiler-sfc": "^3.0.5",
+	"@vue/test-utils": "^2.0.0-rc.0",
+	"jest": "^25.3.0",
+	"ts-jest": "^25.3.1",
+	"typescript": "^3.8.2",
+	"vue": "^3.0.5",
+	"vuex": "^4.0.0"
+  }
 }

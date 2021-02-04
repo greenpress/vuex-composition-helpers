@@ -1,17 +1,9 @@
-import Vue from 'vue';
-import Vuex, {Module} from 'vuex';
+import {Module, createStore} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useNamespacedMutations} from '../src/namespaced';
 
 describe('"useNamespacedMutations" - namespaced store mutations helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given store in arguments', () => {
 		it('should commit mutation with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
@@ -28,7 +20,7 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 					}
 				}
 			};
-			const store = new Vuex.Store<any>({
+			const store = createStore<any>({
 				state: {},
 				modules: {
 					foo: storeModule
@@ -36,6 +28,7 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div @click="doTest(\'' + clickValue + '\')">click</div>',
 					setup() {
 						const {doTest} = useNamespacedMutations(store, 'foo', ['doTest']);
@@ -43,8 +36,7 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 							doTest
 						}
 					}
-				},
-				{localVue}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -72,7 +64,7 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 					}
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {},
 				modules: {
 					foo: storeModule
@@ -80,6 +72,7 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div @click="doTest(\'' + clickValue + '\')">click</div>',
 					setup() {
 						const {doTest} = useNamespacedMutations(undefined, 'foo', ['doTest']);
@@ -88,7 +81,11 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -116,7 +113,7 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 					}
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {},
 				modules: {
 					foo: storeModule
@@ -124,6 +121,7 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div @click="doTest(\'' + clickValue + '\')">click</div>',
 					setup() {
 						const {doTest} = useNamespacedMutations('foo', ['doTest']);
@@ -132,7 +130,11 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();
@@ -146,9 +148,11 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 		it('should dispatch action with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const mutate = jest.fn();
+
 			interface Mutations {
 				doTest: (state: any, payload: string) => void;
 			}
+
 			const storeModule: Module<any, any> = {
 				namespaced: true,
 				state: {
@@ -161,7 +165,7 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 					}
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {},
 				modules: {
 					foo: storeModule
@@ -169,7 +173,9 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 			});
 
 			const wrapper = shallowMount({
-					template: `<div @click="onClicked">click</div>`,
+					props: {},
+					template: `
+						<div @click="onClicked">click</div>`,
 					setup() {
 						const {doTest} = useNamespacedMutations<Mutations>('foo', ['doTest']);
 						const onClicked = () => doTest(clickValue);
@@ -179,7 +185,11 @@ describe('"useNamespacedMutations" - namespaced store mutations helpers', () => 
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(mutate).not.toBeCalled();

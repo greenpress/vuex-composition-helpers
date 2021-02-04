@@ -1,22 +1,15 @@
-import Vue from 'vue';
-import Vuex, { ActionTree } from 'vuex';
+import {ActionTree, createStore} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useActions} from '../src/global';
 
 describe('"useActions" - global store actions helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
 
 	describe('when given both store and map', () => {
 		it('should dispatch action with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const dispatcher = jest.fn();
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				},
@@ -28,6 +21,7 @@ describe('"useActions" - global store actions helpers', () => {
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div @click="doTest(\'' + clickValue + '\')">click</div>',
 					setup() {
 						const {doTest} = useActions(store, ['doTest']);
@@ -35,8 +29,7 @@ describe('"useActions" - global store actions helpers', () => {
 							doTest
 						}
 					}
-				},
-				{localVue}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -52,7 +45,7 @@ describe('"useActions" - global store actions helpers', () => {
 		it('should dispatch action with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const dispatcher = jest.fn();
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				},
@@ -64,6 +57,7 @@ describe('"useActions" - global store actions helpers', () => {
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div @click="doTest(\'' + clickValue + '\')">click</div>',
 					setup() {
 						const {doTest} = useActions(['doTest']);
@@ -72,7 +66,11 @@ describe('"useActions" - global store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -91,7 +89,7 @@ describe('"useActions" - global store actions helpers', () => {
 				doTest: (ctx: any, payload: string) => void
 			}
 
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				},
@@ -103,6 +101,7 @@ describe('"useActions" - global store actions helpers', () => {
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div @click="onClicked">click</div>',
 					setup() {
 						const {doTest} = useActions<Actions>(['doTest']);
@@ -113,7 +112,11 @@ describe('"useActions" - global store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
@@ -132,7 +135,7 @@ describe('"useActions" - global store actions helpers', () => {
 				doTest: (ctx: any, payload: string) => Promise<void>
 			}
 
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				},
@@ -145,6 +148,7 @@ describe('"useActions" - global store actions helpers', () => {
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div></div>',
 					setup() {
 						const {doTest} = useActions<Actions>(['doTest']);
@@ -155,13 +159,17 @@ describe('"useActions" - global store actions helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(dispatcher).not.toBeCalled();
 
 			await (wrapper.vm as any).onClicked();
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			expect(dispatcher).toBeCalledTimes(1);
 			expect(dispatcher).toBeCalledWith(store.state, clickValue);

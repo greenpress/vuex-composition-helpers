@@ -1,11 +1,11 @@
-import {computed} from '@vue/composition-api';
+import {computed} from 'vue';
 import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, KnownKeys, RefTypes, ExtractTypes, ExtractGetterTypes} from './util';
 import {Store} from 'vuex';
 
 export type Nullish = null | undefined;
 
 function computedState(store: any, namespace: string, prop: string) {
-	let module = namespace.split('/').reduce((module, key) => module[key], store.state) 
+	let module = namespace.split('/').reduce((module, key) => module[key], store.state)
 	return computed(() => module[prop])
 }
 

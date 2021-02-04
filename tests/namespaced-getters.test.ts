@@ -1,18 +1,10 @@
-import Vue from 'vue';
-import Vuex, {Module} from 'vuex';
+import {watch} from 'vue';
+import {createStore, Module} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useNamespacedGetters} from '../src/namespaced';
-import {watch} from '@vue/composition-api';
 
 describe('"useNamespacedGetters" - namespaced store state helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given store in arguments', () => {
 		it('should render component using a state getter', () => {
 			const value = 'getter-demo' + Math.random();
@@ -23,13 +15,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					valGetter: () => value
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{valGetter}}</div>',
 					setup() {
 						const {valGetter} = useNamespacedGetters(store, 'foo', ['valGetter']);
@@ -38,7 +31,6 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['foo/valGetter']);
@@ -57,13 +49,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					valGetter: () => value
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{valGetter}}</div>',
 					setup() {
 						const {valGetter} = useNamespacedGetters<Getters>(store, 'foo', ['valGetter']);
@@ -72,7 +65,6 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['foo/valGetter']);
@@ -89,13 +81,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					testGetter: (state) => state.val
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useNamespacedGetters(store, 'foo', ['testGetter']);
@@ -104,18 +97,17 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue}
 			);
 
 			// original value
 			expect(wrapper.text()).toBe(storeModule.state.val);
 
 			// change value, but not yet rendered
-			storeModule.state.val = 'new value' + Math.random();
+			store.state.foo.val = 'new value' + Math.random();
 			expect(wrapper.text()).not.toBe(storeModule.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(storeModule.state.val);
@@ -132,13 +124,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					testGetter: (state) => state.val
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useNamespacedGetters(store, 'foo', ['testGetter']);
@@ -150,23 +143,23 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue}
 			);
 			expect(watcher).toBeCalledTimes(0);
-
-			storeModule.state.val = 'new value' + Math.random();
+			store.state.foo.val = 'new value' + Math.random();
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			expect(watcher).toBeCalledTimes(1);
 		});
 
 		it('should trigger a watcher according a typed getter change', async () => {
 			const watcher = jest.fn();
+
 			interface Getters {
 				testGetter: (state: any) => String;
-			};
+			}
+
 			const storeModule: Module<any, any> = {
 				namespaced: true,
 				state: {
@@ -176,13 +169,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					testGetter: (state) => state.val
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useNamespacedGetters<Getters>(store, 'foo', ['testGetter']);
@@ -194,14 +188,12 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue}
 			);
 			expect(watcher).toBeCalledTimes(0);
-
-			storeModule.state.val = 'new value' + Math.random();
+			store.state.foo.val = 'new value' + Math.random();
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			expect(watcher).toBeCalledTimes(1);
 		});
@@ -217,13 +209,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					valGetter: () => value
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{valGetter}}</div>',
 					setup() {
 						const {valGetter} = useNamespacedGetters(undefined, 'foo', ['valGetter']);
@@ -232,7 +225,11 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['foo/valGetter']);
@@ -249,13 +246,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					testGetter: (state) => state.val
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useNamespacedGetters(undefined, 'foo', ['testGetter']);
@@ -264,18 +262,22 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			// original value
 			expect(wrapper.text()).toBe(storeModule.state.val);
 
 			// change value, but not yet rendered
-			storeModule.state.val = 'new value' + Math.random();
+			store.state.foo.val = 'new value' + Math.random();
 			expect(wrapper.text()).not.toBe(storeModule.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(storeModule.state.val);
@@ -292,13 +294,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					testGetter: (state) => state.val
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useNamespacedGetters(undefined, 'foo', ['testGetter']);
@@ -310,15 +313,19 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 			expect(watcher).toBeCalledTimes(0);
 
 
-			storeModule.state.val = 'new value' + Math.random();
+			store.state.foo.val = 'new value' + Math.random();
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			expect(watcher).toBeCalledTimes(1);
 		});
@@ -334,13 +341,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					valGetter: () => value
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{valGetter}}</div>',
 					setup() {
 						const {valGetter} = useNamespacedGetters('foo', ['valGetter']);
@@ -349,7 +357,11 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.getters['foo/valGetter']);
@@ -366,13 +378,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					testGetter: (state) => state.val
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useNamespacedGetters('foo', ['testGetter']);
@@ -381,18 +394,22 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			// original value
 			expect(wrapper.text()).toBe(storeModule.state.val);
 
 			// change value, but not yet rendered
-			storeModule.state.val = 'new value' + Math.random();
+			store.state.foo.val = 'new value' + Math.random();
 			expect(wrapper.text()).not.toBe(storeModule.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(storeModule.state.val);
@@ -409,13 +426,14 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 					testGetter: (state) => state.val
 				}
 			};
-			const store = new Vuex.Store({
+			const store = createStore({
 				modules: {
 					foo: storeModule
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{val}}</div>',
 					setup() {
 						const {testGetter} = useNamespacedGetters('foo', ['testGetter']);
@@ -427,15 +445,18 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 			expect(watcher).toBeCalledTimes(0);
 
-
-			storeModule.state.val = 'new value' + Math.random();
+			store.state.foo.val = 'new value' + Math.random();
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			expect(watcher).toBeCalledTimes(1);
 		});

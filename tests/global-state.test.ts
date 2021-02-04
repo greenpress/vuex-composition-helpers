@@ -1,27 +1,20 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import {watch} from 'vue';
+import {createStore} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
-import {getLocalVue} from './utils/local-vue';
 import {useState} from '../src/global';
-import {watch} from '@vue/composition-api';
 
 describe('"useState" - global store state helpers', () => {
-	let localVue: typeof Vue;
-
-	beforeEach(() => {
-		localVue = getLocalVue();
-	});
-
 	describe('when given both store and map', () => {
 		it('should render component using a state value', () => {
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useState(store, ['val']);
@@ -29,8 +22,7 @@ describe('"useState" - global store state helpers', () => {
 							stateVal: val
 						}
 					}
-				},
-				{localVue}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.state.val);
@@ -40,8 +32,9 @@ describe('"useState" - global store state helpers', () => {
 			interface RootState {
 				val: string;
 				num: number;
-			};
-			const store = new Vuex.Store<RootState>({
+			}
+
+			const store = createStore<RootState>({
 				state: {
 					val: 'test-demo' + Math.random(),
 					num: 3
@@ -49,6 +42,7 @@ describe('"useState" - global store state helpers', () => {
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useState<RootState>(store, ['val']);
@@ -56,21 +50,21 @@ describe('"useState" - global store state helpers', () => {
 							stateVal: val
 						}
 					}
-				},
-				{localVue}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.state.val);
 		});
 
 		it('should change component contents according a state change', async () => {
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useState(store, ['val']);
@@ -78,8 +72,7 @@ describe('"useState" - global store state helpers', () => {
 							stateVal: val
 						}
 					}
-				},
-				{localVue}
+				}
 			);
 
 			// original value
@@ -90,7 +83,7 @@ describe('"useState" - global store state helpers', () => {
 			expect(wrapper.text()).not.toBe(store.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(store.state.val);
@@ -98,13 +91,14 @@ describe('"useState" - global store state helpers', () => {
 
 		it('should trigger a watcher according a state change', async () => {
 			const watcher = jest.fn();
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useState(store, ['val']);
@@ -115,8 +109,7 @@ describe('"useState" - global store state helpers', () => {
 							stateVal: val
 						}
 					}
-				},
-				{localVue}
+				}
 			);
 
 			expect(watcher).toBeCalledTimes(0);
@@ -124,7 +117,7 @@ describe('"useState" - global store state helpers', () => {
 			store.state.val = 'new value' + Math.random();
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			expect(watcher).toBeCalledTimes(1);
 
@@ -133,13 +126,14 @@ describe('"useState" - global store state helpers', () => {
 
 	describe('when given map only', () => {
 		it('should render component using a state value', () => {
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useState(['val']);
@@ -148,7 +142,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.state.val);
@@ -157,14 +155,16 @@ describe('"useState" - global store state helpers', () => {
 		it('should render component using a typed state value', () => {
 			interface RootState {
 				val: string,
-			};
-			const store = new Vuex.Store({
+			}
+
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useState<RootState>(['val']);
@@ -173,20 +173,25 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(wrapper.text()).toBe(store.state.val);
 		});
 
 		it('should change component contents according a state change', async () => {
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{stateVal}}</div>',
 					setup() {
 						const {val} = useState(['val']);
@@ -195,7 +200,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			// original value
@@ -206,7 +215,7 @@ describe('"useState" - global store state helpers', () => {
 			expect(wrapper.text()).not.toBe(store.state.val);
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			// now it should be rendered
 			expect(wrapper.text()).toBe(store.state.val);
@@ -214,16 +223,17 @@ describe('"useState" - global store state helpers', () => {
 
 		it('should trigger a watcher according a state change', async () => {
 			const watcher = jest.fn();
-			const store = new Vuex.Store({
+			const store = createStore({
 				state: {
 					val: 'test-demo' + Math.random()
 				}
 			});
 
 			const wrapper = shallowMount({
+					props: {},
 					template: '<div>{{stateVal}}</div>',
 					setup() {
-						const {val} = useState( ['val']);
+						const {val} = useState(['val']);
 
 						watch(val, watcher);
 
@@ -232,7 +242,11 @@ describe('"useState" - global store state helpers', () => {
 						}
 					}
 				},
-				{localVue, store}
+				{
+					global: {
+						plugins: [store]
+					}
+				}
 			);
 
 			expect(watcher).toBeCalledTimes(0);
@@ -240,7 +254,7 @@ describe('"useState" - global store state helpers', () => {
 			store.state.val = 'new value' + Math.random();
 
 			// wait for rendering
-			await wrapper.vm.$nextTick();
+			await wrapper.vm.$forceUpdate();
 
 			expect(watcher).toBeCalledTimes(1);
 
