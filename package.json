@@ -26,10 +26,6 @@
   "url": "https://github.com/greenpress/vuex-composition-helpers/issues"
  },
  "homepage": "https://github.com/greenpress/vuex-composition-helpers#readme",
- "peerDependencies": {
-  "@vue/composition-api": ">= 0.4.0",
-  "vuex": ">= 3.0.0"
- },
  "devDependencies": {
   "@types/jest": "^25.2.1",
   "@vue/composition-api": "^1.0.0-beta.22",
