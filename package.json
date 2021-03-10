@@ -1,6 +1,6 @@
 {
  "name": "vuex-composition-helpers",
- "version": "1.0.22",
+ "version": "1.0.23",
  "description": "Helpers to use Vuex store form Vue Composition API",
  "author": "David Meir-Levy <davidmeirlevy@gmail.com>",
  "license": "MIT",
