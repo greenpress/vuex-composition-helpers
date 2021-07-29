@@ -125,6 +125,36 @@ export default {
 }
 ```
 
+#### Typescript Namespaced Usage Example
+
+```ts
+import { useState, useActions } from 'vuex-composition-helpers';
+import { ModuleState, ModuleGetters, ModuleActions, ModuleMutations } from "../store/subModule"
+
+export default {
+	props: {
+		articleId: String
+	},
+	setup(props) {
+		const { useState, useActions } = createNamespacedHelpers<
+			ModuleState,
+			ModuleGetters,
+			ModuleActions,
+			ModuleMutations
+		>('articles'); // specific module name and generics
+		const { fetch } = useActions(['fetch']); // no generics needed any more
+		const { article, comments } = useGetters(['article', 'comments']); // no generics needed any more
+		fetch(props.articleId); // dispatch the "fetch" action
+
+		return {
+			// both are computed compositions for to the store
+			article,
+			comments
+		}
+	}
+}
+```
+
 ### Advanced Usage Example
 
 Consider separate the store composition file from the store usage inside the component. i.g.:
