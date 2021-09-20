@@ -1,11 +1,11 @@
 import {computed} from '@vue/composition-api';
+import {Store} from 'vuex/types';
 import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, KnownKeys, RefTypes, ExtractTypes, ExtractGetterTypes} from './util';
-import {Store} from 'vuex';
 
 export type Nullish = null | undefined;
 
 /**
- * Gets a computed observable fro the vuex state
+ * Gets a computed observable for the vuex state.
  * @param store The store to get the state from
  * @param namespace The namespace to get the sate from
  * @param prop The state prop to get
@@ -156,15 +156,22 @@ export function useNamespacedGetters<TGetters = any>(storeOrNamespace: Store<any
 	return useMapping(store, namespace, map, computedGetter);
 }
 
+export type NamespacedUseState<TState> = (map: KnownKeys<TState>[]) => RefTypes<TState>;
+export type NamespacedUseGetter<TGetters> = (map: KnownKeys<TGetters>[]) => ExtractGetterTypes<TGetters>;
+export type NamespacedUseMutations<TMutations> = (map: KnownKeys<TMutations>[]) => ExtractTypes<TMutations, Function>;
+export type NamespacedUseActions<TActions> = (map: KnownKeys<TActions>[]) => ExtractTypes<TActions, Function>;
+
 export type NamespacedHelpers<TState = any, TGetters = any, TActions = any, TMutations = any> = {
-	useState: (map: KnownKeys<TState>[]) => RefTypes<TState>;
-	useGetters: (map: KnownKeys<TGetters>[]) => ExtractGetterTypes<TGetters>;
-	useMutations: (map: KnownKeys<TMutations>[]) => ExtractTypes<TMutations, Function>;
-	useActions: (map: KnownKeys<TActions>[]) => ExtractTypes<TActions, Function>;
+	useState: NamespacedUseState<TState>;
+	useGetters: NamespacedUseGetter<TGetters>;
+	useMutations: NamespacedUseMutations<TMutations>;
+	useActions: NamespacedUseActions<TActions>;
 }
 
 /**
+ * Creates namespaced helpers for a vuex module.
  *
+ * Injects the vuex store from the root vue instance.
  * @param namespace The namespace to create helpers for
  *
  * @example
@@ -173,7 +180,7 @@ export type NamespacedHelpers<TState = any, TGetters = any, TActions = any, TMut
  */
 export function createNamespacedHelpers<TState = any, TGetters = any, TActions = any, TMutations = any>(namespace: string): NamespacedHelpers<TState, TGetters, TActions, TMutations>
 /**
- *
+ * Creates namespaced helpers for a vuex module in the provided store.
  * @param store The store to create namespaced helpers for
  * @param namespace The namespace to create helpers for
  *

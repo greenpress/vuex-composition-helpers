@@ -4,6 +4,7 @@
 	"module": "esnext",
 	"strict": true,
 	"esModuleInterop": true,
+    "strictBindCallApply": false,
 	"forceConsistentCasingInFileNames": true,
 	"declaration": true,
 	"declarationDir": "dist/types",

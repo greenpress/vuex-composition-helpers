@@ -42,7 +42,7 @@ export function useState<TState = any>(storeOrMap: Store<TState> | KnownKeys<TSt
 		map = store as KnownKeys<TState>[];
 		store = getStoreFromInstance();
 	}
-	return useMapping(store, null, map, computedState);
+	return useMapping(store as Store<TState>, null, map, computedState);
 }
 
 /**
@@ -70,7 +70,7 @@ export function useGetters<TGetters = any>(storeOrMap: Store<any> | KnownKeys<TG
 		map = store as KnownKeys<TGetters>[];
 		store = getStoreFromInstance();
 	}
-	return useMapping(store, null, map, computedGetter);
+	return useMapping(store as Store<any>, null, map, computedGetter);
 }
 
 /**
@@ -99,7 +99,7 @@ export function useMutations<TMutations = any>(storeOrMap: Store<any> | KnownKey
 		map = store as KnownKeys<TMutations>[];
 		store = getStoreFromInstance();
 	}
-	return useMapping(store, null, map, getMutation);
+	return useMapping(store as Store<any>, null, map, getMutation);
 }
 
 /**
@@ -128,5 +128,5 @@ export function useActions<TActions = any>(storeOrMap: Store<any> | KnownKeys<TA
 		map = store as KnownKeys<TActions>[];
 		store = getStoreFromInstance();
 	}
-	return useMapping(store, null, map, getAction);
+	return useMapping(store as Store<any>, null, map, getAction);
 }
