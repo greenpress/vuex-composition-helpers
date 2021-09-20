@@ -27,7 +27,7 @@ export declare type ExtractGetterTypes<O> = {
 
 export declare type KnownKeys<T> = {
 	[K in keyof T]: string extends K
-		? (T extends any ? any : never)
+		? (T extends any ? string : never)
 		: number extends K
 			? never
 			: K

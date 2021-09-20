@@ -1,3 +1,3 @@
-export * from './global'
-export * from './namespaced'
-export * from './wrapper'
+export * from './global';
+export * from './namespaced';
+export * from './wrapper';
