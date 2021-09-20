@@ -16,6 +16,7 @@
  "typings": "dist/types/index.d.ts",
  "scripts": {
   "prepublish": "npm run test && npx tsc --build tsconfig.json",
+  "build": "tsc",
   "test": "jest"
  },
  "repository": {
@@ -36,5 +37,16 @@
   "vue": "^2.6.11",
   "vue-template-compiler": "^2.6.11",
   "vuex": "^3.1.3"
+ },
+ "peerDependencies": {
+    "@vue/composition-api": "^1.0.0-beta.22",
+    "typescript": "^3.8.2",
+    "vue": "^2.6.11",
+    "vuex": "^3.1.3"
+ },
+ "peerDependenciesMeta": {
+     "typescript": {
+         "optional": true
+     }
  }
 }
