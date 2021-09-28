@@ -6,9 +6,9 @@ import {KnownKeys, RefTypes, ExtractGetterTypes, ExtractTypes} from "./util";
 export type WrappedStore = {
     createNamespacedHelpers: <TState = any, TGetters = any, TActions = any, TMutations = any>(namespace: string) => NamespacedHelpers<TState, TGetters, TActions, TMutations>;
     useState: <TState = any>(map: KnownKeys<TState>[]) => RefTypes<TState>;
-	useGetters: <TGetters = any>(map: KnownKeys<TGetters>[]) => ExtractGetterTypes<TGetters>;
-	useMutations: <TMutations = any>(map: KnownKeys<TMutations>[]) => ExtractTypes<TMutations, Function>;
-	useActions: <TActions = any>(map: KnownKeys<TActions>[]) => ExtractTypes<TActions, Function>;
+    useGetters: <TGetters = any>(map: KnownKeys<TGetters>[]) => ExtractGetterTypes<TGetters>;
+    useMutations: <TMutations = any>(map: KnownKeys<TMutations>[]) => ExtractTypes<TMutations, Function>;
+    useActions: <TActions = any>(map: KnownKeys<TActions>[]) => ExtractTypes<TActions, Function>;
 };
 
 export function wrapStore(store: Store<any>): WrappedStore {
