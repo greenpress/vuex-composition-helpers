@@ -5,39 +5,39 @@
   "author": "David Meir-Levy <davidmeirlevy@gmail.com>",
   "license": "MIT",
   "keywords": [
-	"vue",
-	"vuex",
-	"composition-api",
-	"store",
-	"state management"
+    "vue",
+    "vuex",
+    "composition-api",
+    "store",
+    "state management"
   ],
   "main": "src/index.ts",
   "browser": "dist/index.js",
   "typings": "dist/types/index.d.ts",
   "scripts": {
-	"prepublish": "npm run test && npx tsc --build tsconfig.json",
-	"test": "jest"
+    "prepublish": "npm run test && npx tsc --build tsconfig.json",
+    "test": "jest"
   },
   "repository": {
-	"type": "git",
-	"url": "git+https://github.com/greenpress/vuex-composition-helpers.git"
+    "type": "git",
+    "url": "git+https://github.com/greenpress/vuex-composition-helpers.git"
   },
   "bugs": {
-	"url": "https://github.com/greenpress/vuex-composition-helpers/issues"
+    "url": "https://github.com/greenpress/vuex-composition-helpers/issues"
   },
   "homepage": "https://github.com/greenpress/vuex-composition-helpers#readme",
   "peerDependencies": {
-	"vuex": ">= 4.0.0",
-	"vue": ">= 3.0.5"
+    "vue": ">= 3.0.5",
+    "vuex": ">= 4.0.0"
   },
   "devDependencies": {
-	"@types/jest": "^25.2.1",
-	"@vue/compiler-sfc": "^3.0.5",
-	"@vue/test-utils": "^2.0.0-rc.0",
-	"jest": "^25.3.0",
-	"ts-jest": "^25.3.1",
-	"typescript": "^3.8.2",
-	"vue": "^3.0.5",
-	"vuex": "^4.0.0"
+    "@types/jest": "^25.2.1",
+    "@vue/compiler-sfc": "^3.0.5",
+    "@vue/test-utils": "^2.0.0-rc.0",
+    "jest": "^25.3.0",
+    "ts-jest": "^25.3.1",
+    "typescript": "^3.8.2",
+    "vue": "^3.0.5",
+    "vuex": "^4.0.0"
   }
 }
