@@ -11,6 +11,11 @@ A util package to use Vuex with Composition API easily.
 $ npm install vuex-composition-helpers
 ```
 
+For Vue 3.x - use the `next` tag:
+```shell
+$ npm install vuex-composition-helpers@next
+```
+
 This library is not transpiled by default. Your project should transpile it, which makes the final build smaller and more tree-shakeable. Take a look at [transpiling](#transpiling).
 
 Non-typescript projects may import the library from the `dist` subdirectory, where plain javascript distribution files are located.
