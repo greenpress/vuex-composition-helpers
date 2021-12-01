@@ -1,4 +1,5 @@
 import {computed, getCurrentInstance, Ref} from '@vue/composition-api';
+import {Store} from 'vuex/types';
 
 declare type OmitFirstArg<F, TReturn> =
 	F extends (x: any, ...args: infer P) => any
@@ -27,7 +28,7 @@ export declare type ExtractGetterTypes<O> = {
 
 export declare type KnownKeys<T> = {
 	[K in keyof T]: string extends K
-		? (T extends any ? any : never)
+		? (T extends any ? string : never)
 		: number extends K
 			? never
 			: K
@@ -41,7 +42,7 @@ export declare type RefTypes<T> = {
 	readonly [Key in keyof T]: Ref<T[Key]>
 }
 
-function runCB<T>(cb: Function, store: any, namespace: string | null, prop: KnownKeys<T> | string) {
+function runCB<T>(cb: Function, store: Store<any>, namespace: string | null, prop: KnownKeys<T> | string) {
 	if (cb.length === 3) { // choose which signature to pass to cb function
 		return cb(store, namespace, prop);
 	} else {
@@ -49,14 +50,14 @@ function runCB<T>(cb: Function, store: any, namespace: string | null, prop: Know
 	}
 }
 
-function useFromArray(store: any, namespace: string | null, props: Array<string>, cb: Function) {
+function useFromArray(store: Store<any>, namespace: string | null, props: Array<string>, cb: Function) {
 	return props.reduce((result, prop) => {
 		result[prop] = runCB(cb, store, namespace, prop)
 		return result;
 	}, {} as any);
 }
 
-function useFromObject<T>(store: any, namespace: string | null, props: KnownKeys<T>[], cb: Function) {
+function useFromObject<T>(store: Store<any>, namespace: string | null, props: KnownKeys<T>[], cb: Function) {
 	const obj: any = {};
 	for (let key in props) {
 		if (props.hasOwnProperty(key)) {
@@ -66,7 +67,7 @@ function useFromObject<T>(store: any, namespace: string | null, props: KnownKeys
 	return obj;
 }
 
-export function computedGetter<T = any>(store: any, prop: string) {
+export function computedGetter<T = any>(store: Store<any>, prop: string) {
 	return computed<T>(() => store.getters[prop]);
 }
 
@@ -82,7 +83,7 @@ export function getAction(store: any, action: string): Function {
 	}
 }
 
-export function useMapping<T>(store: any, namespace: string | null, map: KnownKeys<T>[] | Array<string> | undefined, cb: Function) {
+export function useMapping<T>(store: Store<any>, namespace: string | null, map: KnownKeys<T>[] | undefined, cb: Function) {
 	if (!map) {
 		return {};
 	}
