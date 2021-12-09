@@ -17,6 +17,10 @@ declare type InferGetterType<T> =
 		? ReturnType<T>
 		: any;
 
+export declare type Nullish = null | undefined;
+
+export declare type Namespace = string | Nullish;
+
 export declare type ExtractTypes<O, TUnknown = any> = {
 	readonly [K in keyof O]: InferType<O[K], TUnknown>;
 };
