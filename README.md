@@ -49,6 +49,7 @@ export default {
 
 ### Namespaced Usage Examples
 
+#### `createNamespacedHelpers`
 ```js
 import { createNamespacedHelpers } from 'vuex-composition-helpers';
 const { useState, useActions } = createNamespacedHelpers('articles'); // specific module name
@@ -76,7 +77,7 @@ You can also import your store from outside the component, and create the helper
 ```js
 import { createNamespacedHelpers } from 'vuex-composition-helpers';
 import store from '../store'; // local store file
-const { useState, useActions } = createNamespacedHelpers(store, 'articles'); // specific module name
+import const { useState, useActions } = createNamespacedHelpers(store, 'articles'); // specific module name
 const { fetch } = useActions(['fetch']);
 
 export default {
@@ -92,6 +93,18 @@ export default {
 			article,
 			comments
 		}
+	}
+}
+```
+
+#### Inline namespacing
+```js
+import { useState, useActions } from 'vuex-composition-helpers';
+
+export default {
+	setup(props) {
+		const { article, comments } = useState('sections/blog', ['article', 'comments']);
+		return { article, comments }
 	}
 }
 ```

@@ -12,7 +12,7 @@ describe('"useMutations" - global store mutations helpers', () => {
 		localVue = getLocalVue();
 	});
 
-	describe('when given both store and map', () => {
+	describe('when given store and map', () => {
 		it('should commit mutation with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const mutate = jest.fn();
