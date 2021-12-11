@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, {Module} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
 import {getLocalVue} from './utils/local-vue';
@@ -13,7 +13,7 @@ describe('"useState" - global store state helpers', () => {
 		localVue = getLocalVue();
 	});
 
-	describe('when given both store and map', () => {
+	describe('when given store and map', () => {
 		it('should render component using a state value', () => {
 			const store = new Vuex.Store({
 				state: {
@@ -245,6 +245,116 @@ describe('"useState" - global store state helpers', () => {
 			expect(watcher).toBeCalledTimes(1);
 
 		});
-	})
+	});
+
+	describe('when given namespace and map', () => {
+		it('should render component using a state value', () => {
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				}
+			};
+			const store = new Vuex.Store({
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{stateVal}}</div>',
+					setup() {
+						const {val} = useState('foo', ['val']);
+						return {
+							stateVal: val
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			expect(wrapper.text()).toBe(storeModule.state.val);
+		});
+
+		it('should change component contents according a state change', async () => {
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				}
+			};
+			const store = new Vuex.Store({
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{stateVal}}</div>',
+					setup() {
+						const {val} = useState('foo', ['val']);
+						return {
+							stateVal: val
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			// original value
+			expect(wrapper.text()).toBe(storeModule.state.val);
+
+			// change value, but not yet rendered
+			storeModule.state.val = 'new value' + Math.random();
+			expect(wrapper.text()).not.toBe(storeModule.state.val);
+
+			// wait for rendering
+			await wrapper.vm.$nextTick();
+
+			// now it should be rendered
+			expect(wrapper.text()).toBe(storeModule.state.val);
+		});
+
+		it('should trigger a watcher according a state change', async () => {
+			const watcher = jest.fn();
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				}
+			};
+			const store = new Vuex.Store({
+				state: {},
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div>{{stateVal}}</div>',
+					setup() {
+						const {val} = useState('foo', ['val']);
+
+						watch(val, watcher);
+
+						return {
+							stateVal: val
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			expect(watcher).toBeCalledTimes(0);
+
+			storeModule.state.val = 'new value' + Math.random();
+
+			// wait for rendering
+			await wrapper.vm.$nextTick();
+
+			expect(watcher).toBeCalledTimes(1);
+
+		});
+	});
 
 });
