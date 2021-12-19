@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex, { ActionTree } from 'vuex';
+import Vuex, {ActionTree, Module} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
 import {getLocalVue} from './utils/local-vue';
@@ -12,7 +12,7 @@ describe('"useActions" - global store actions helpers', () => {
 		localVue = getLocalVue();
 	});
 
-	describe('when given both store and map', () => {
+	describe('when given store and map', () => {
 		it('should dispatch action with given payload', () => {
 			const clickValue = 'demo-click-' + Math.random();
 			const dispatcher = jest.fn();
@@ -166,6 +166,97 @@ describe('"useActions" - global store actions helpers', () => {
 			expect(dispatcher).toBeCalledTimes(1);
 			expect(dispatcher).toBeCalledWith(store.state, clickValue);
 		});
-	})
+	});
+	
+	describe('when given namespace and map', () => {
+		it('should dispatch action with given payload', () => {
+			const clickValue = 'demo-click-' + Math.random();
+			const dispatcher = jest.fn();
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				},
+				actions: {
+					doTest: ({state}, payload) => {
+						dispatcher(state, payload);
+					}
+				}
+			};
+			const store = new Vuex.Store({
+				state: {},
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div @click="doTest(\'' + clickValue + '\')">click</div>',
+					setup() {
+						const {doTest} = useActions('foo', ['doTest']);
+						return {
+							doTest
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			expect(dispatcher).not.toBeCalled();
+
+			wrapper.find('div').trigger('click');
+
+			expect(dispatcher).toBeCalledTimes(1);
+			expect(dispatcher).toBeCalledWith(storeModule.state, clickValue);
+		});
+
+		it('should dispatch a typed action with given payload', () => {
+			const clickValue = 'demo-click-' + Math.random();
+			const dispatcher = jest.fn();
+
+			interface Actions {
+				doTest: (ctx: any, payload: string) => void
+			}
+
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				state: {
+					val: 'test-demo' + Math.random()
+				},
+				actions: {
+					doTest: ({state}, payload) => {
+						dispatcher(state, payload);
+					}
+				}
+			};
+			const store = new Vuex.Store({
+				state: {},
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const wrapper = shallowMount({
+					template: '<div @click="onClicked">click</div>',
+					setup() {
+						const {doTest} = useActions<Actions>('foo', ['doTest']);
+						const onClicked = () => doTest(clickValue);
+						return {
+							onClicked,
+							doTest
+						}
+					}
+				},
+				{localVue, store}
+			);
+
+			expect(dispatcher).not.toBeCalled();
+
+			wrapper.find('div').trigger('click');
+
+			expect(dispatcher).toBeCalledTimes(1);
+			expect(dispatcher).toBeCalledWith(storeModule.state, clickValue);
+		});
+	});
 
 });
