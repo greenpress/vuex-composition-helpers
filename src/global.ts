@@ -3,7 +3,10 @@ import {computed, readonly} from 'vue';
 import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, ExtractGetterTypes, ExtractTypes, KnownKeys, RefTypes} from './util';
 
 function computedState(store: any, prop: string) {
-	return computed(() => readonly(store.state[prop]));
+	return computed(() => {
+		const val = store.state[prop];
+		return typeof val === 'object' ? readonly(val) : val
+	});
 }
 
 export function useStore<TState = any>() {
