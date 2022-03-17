@@ -89,6 +89,20 @@ describe('"useState" - global store state helpers', () => {
 			expect(wrapper.text()).toBe(store.state.val);
 		});
 
+		it('should not be able to mutate state directly', async () => {
+			const store = createStore({
+				state: {
+					val: {
+						nestedValue: 'original-value'
+					}
+				}
+			});
+
+			const {val} = useState(store, ['val'])
+			val.value.nestedValue = 'changed-value' // This should put a console.warn and not change value
+			expect('original-value').toBe(store.state.val.nestedValue);
+		});
+
 		it('should trigger a watcher according a state change', async () => {
 			const watcher = jest.fn();
 			const store = createStore({
