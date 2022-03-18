@@ -1,6 +1,6 @@
 import {Store} from 'vuex/types';
 import {computed, readonly} from 'vue';
-import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, ExtractGetterTypes, ExtractTypes, KnownKeys, RefTypes} from './util';
+import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, ExtractGetterTypes, ExtractTypes, KnownKeys, ComputedRefTypes} from './util';
 
 function computedState(store: any, prop: string) {
 	return computed(() => {
@@ -13,7 +13,7 @@ export function useStore<TState = any>() {
 	return getStoreFromInstance() as Store<TState>
 }
 
-export function useState<TState = any>(storeOrMap: Store<TState> | KnownKeys<TState>[], map?: KnownKeys<TState>[]): RefTypes<TState> {
+export function useState<TState = any>(storeOrMap: Store<TState> | KnownKeys<TState>[], map?: KnownKeys<TState>[]): ComputedRefTypes<TState> {
 	let store = storeOrMap;
 
 	if (arguments.length === 1) {
