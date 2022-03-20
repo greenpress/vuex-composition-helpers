@@ -1,4 +1,4 @@
-import {computed, getCurrentInstance, Ref} from 'vue';
+import {computed, readonly, getCurrentInstance, ComputedRef, DeepReadonly} from 'vue';
 import {Store} from 'vuex/types';
 
 declare type OmitFirstArg<F, TReturn> =
@@ -23,7 +23,7 @@ export declare type ExtractTypes<O, TUnknown = any> = {
 };
 
 export declare type ExtractGetterTypes<O> = {
-	readonly [K in keyof O]: Ref<InferGetterType<O[K]>>;
+	readonly [K in keyof O]: ComputedRef<DeepReadonly<InferGetterType<O[K]>>>
 };
 
 export declare type KnownKeys<T> = {
@@ -38,8 +38,8 @@ export declare type KnownKeys<T> = {
 	? U
 	: never;
 
-export declare type RefTypes<T> = {
-	readonly [Key in keyof T]: Ref<T[Key]>
+export declare type ComputedRefTypes<T> = {
+	readonly [Key in keyof T]: ComputedRef<DeepReadonly<T[Key]>>
 }
 
 function runCB<T>(cb: Function, store: any, namespace: string | null, prop: KnownKeys<T> | string) {
@@ -68,7 +68,10 @@ function useFromObject<T>(store: any, namespace: string | null, props: KnownKeys
 }
 
 export function computedGetter<T = any>(store: any, prop: string) {
-	return computed<T>(() => store.getters[prop]);
+	return computed<T>(() => {
+		const val = store.getters[prop];
+		return typeof val === 'object' ? readonly(val) : val
+	});
 }
 
 export function getMutation(store: any, mutation: string): Function {

@@ -1,15 +1,18 @@
-import {computed} from 'vue';
-import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, KnownKeys, RefTypes, ExtractTypes, ExtractGetterTypes} from './util';
+import {computed, readonly} from 'vue';
+import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, KnownKeys, ComputedRefTypes, ExtractTypes, ExtractGetterTypes} from './util';
 import {Store} from 'vuex';
 
 export type Nullish = null | undefined;
 
 function computedState(store: any, namespace: string, prop: string) {
 	let module = namespace.split('/').reduce((module, key) => module[key], store.state)
-	return computed(() => module[prop])
+	return computed(() => {
+		const val = module[prop];
+		return typeof val === 'object' ? readonly(val) : val
+	});
 }
 
-export function useNamespacedState<TState = any>(storeOrNamespace: Store<any> | string  | Nullish, namespaceOrMap: string | KnownKeys<TState>[], map?: KnownKeys<TState>[]): RefTypes<TState> {
+export function useNamespacedState<TState = any>(storeOrNamespace: Store<any> | string  | Nullish, namespaceOrMap: string | KnownKeys<TState>[], map?: KnownKeys<TState>[]): ComputedRefTypes<TState> {
 	let store: Store<any>, namespace: string;
 
 	if (arguments.length === 2) {
@@ -66,7 +69,7 @@ export function useNamespacedGetters<TGetters = any>(storeOrNamespace: Store<any
 }
 
 export function createNamespacedHelpers<TState = any, TGetters = any, TActions = any, TMutations = any>(storeOrNamespace: Store<any> | string, namespace?: string):{
-	useState: (map?: KnownKeys<TState>[]) => RefTypes<TState>;
+	useState: (map?: KnownKeys<TState>[]) => ComputedRefTypes<TState>;
 	useGetters: (map?: KnownKeys<TGetters>[]) => ExtractGetterTypes<TGetters>;
 	useMutations: (map?: KnownKeys<TMutations>[]) => ExtractTypes<TMutations, Function>;
 	useActions: (map?: KnownKeys<TActions>[]) => ExtractTypes<TActions, Function>;

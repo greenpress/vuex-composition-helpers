@@ -197,6 +197,61 @@ describe('"useNamespacedGetters" - namespaced store state helpers', () => {
 
 			expect(watcher).toBeCalledTimes(1);
 		});
+
+
+		it('should not be able to mutate getter and trigger a warning', async () => {
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				getters: {
+					valGetter: (state) => 'original-value'
+				}
+			};
+			const store = createStore({
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const {valGetter} = useNamespacedGetters(store, 'foo', ['valGetter'])
+
+			const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
+			// @ts-ignore
+			valGetter.value = 'some-value'
+			expect(console.warn).toHaveBeenLastCalledWith("Write operation failed: computed value is readonly");
+			consoleWarnMock.mockRestore();
+
+			expect(valGetter.value).toBe('original-value');
+		});
+
+		it('should not be able to mutate getter objects and trigger a warning', async () => {
+
+			const getters = {
+				valGetter: () => ({
+					nestedValue: {
+						nestedValue2: 'original-value'
+					}
+				})
+			}
+			const storeModule: Module<any, any> = {
+				namespaced: true,
+				getters,
+			};
+			const store = createStore({
+				modules: {
+					foo: storeModule
+				}
+			});
+
+			const {valGetter} = useNamespacedGetters<typeof getters>(store, 'foo', ['valGetter'])
+
+			const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
+			// @ts-ignore
+			valGetter.value.nestedValue.nestedValue2 = 'changed-value'
+			expect(console.warn).toHaveBeenLastCalledWith("Set operation on key \"nestedValue2\" failed: target is readonly.", valGetter.value.nestedValue);
+			consoleWarnMock.mockRestore();
+
+			expect(valGetter.value.nestedValue.nestedValue2).toBe('original-value');
+		});
 	});
 
 	describe('when given store in argument is undefined', () => {
