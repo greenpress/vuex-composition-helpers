@@ -46,7 +46,7 @@ function runCB<T>(cb: Function, store: any, namespace: string | null, prop: Know
 	if (cb.length === 3) { // choose which signature to pass to cb function
 		return cb(store, namespace, prop);
 	} else {
-		return cb(store, namespace ? `${namespace}/${prop}` : prop);
+		return cb(store, namespace ? `${namespace}/${String(prop)}` : prop);
 	}
 }
 
