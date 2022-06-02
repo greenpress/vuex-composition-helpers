@@ -29,7 +29,7 @@ export declare type ExtractGetterTypes<O> = {
 	readonly [K in keyof O]: Ref<InferGetterType<O[K]>>;
 };
 
-export declare type KnownKeys<T> = {
+declare type KnownKeysWithAllPrimitiveTypes<T> = {
 	[K in keyof T]: string extends K
 		? (T extends any ? any : never)
 		: number extends K
@@ -40,6 +40,8 @@ export declare type KnownKeys<T> = {
 	}
 	? U
 	: never;
+
+export declare type KnownKeys<T> = Exclude<KnownKeysWithAllPrimitiveTypes<T>, symbol>
 
 export declare type RefTypes<T> = {
 	readonly [Key in keyof T]: Ref<T[Key]>
