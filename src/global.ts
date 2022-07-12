@@ -1,5 +1,5 @@
 import {Store} from 'vuex/types';
-import {computed} from '@vue/composition-api';
+import {computed} from 'vue';
 import {computedGetter, getAction, getMutation, getStoreFromInstance, useMapping, ExtractGetterTypes, ExtractTypes, KnownKeys, RefTypes, Namespace, Nullish} from './util';
 
 function computedState(store: any, prop: string) {
@@ -7,7 +7,7 @@ function computedState(store: any, prop: string) {
 }
 
 function computedNamespacedState(store: any, namespace: string, prop: string) {
-	let module = namespace.split('/').reduce((module, key) => module[key], store.state) 
+	let module = namespace.split('/').reduce((module, key) => module[key], store.state)
 	return computed(() => module[prop])
 }
 

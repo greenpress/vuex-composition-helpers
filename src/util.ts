@@ -1,4 +1,4 @@
-import {computed, getCurrentInstance, Ref} from '@vue/composition-api';
+import {computed, getCurrentInstance, Ref} from 'vue';
 
 declare type OmitFirstArg<F, TReturn> =
 	F extends (x: any, ...args: infer P) => any
