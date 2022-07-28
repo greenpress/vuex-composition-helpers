@@ -1,10 +1,9 @@
-import Vue from 'vue';
+import Vue, {watch} from 'vue';
 import Vuex, {Module} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
 import {getLocalVue} from './utils/local-vue';
 import {useNamespacedState} from '../src/namespaced';
-import {watch} from '@vue/composition-api';
 
 describe('"useNamespacedState" - namespaced store state helpers', () => {
 	let localVue: typeof Vue;

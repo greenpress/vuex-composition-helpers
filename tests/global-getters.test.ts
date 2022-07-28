@@ -1,10 +1,9 @@
-import Vue from 'vue';
+import Vue, {watch, computed} from 'vue';
 import Vuex, {GetterTree, Module} from 'vuex';
 import {shallowMount} from '@vue/test-utils';
 
 import {getLocalVue} from './utils/local-vue';
 import {useGetters} from '../src/global';
-import {watch, computed} from '@vue/composition-api';
 
 describe('"useGetters" - global store getters helpers', () => {
 	let localVue: typeof Vue;
