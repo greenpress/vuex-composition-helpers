@@ -7,13 +7,31 @@ A util package to use Vuex with Composition API easily.
 
 ## Installation
 
+### For Vue 2.0-2.6.x - 1.1.x
 ```shell
 $ npm install vuex-composition-helpers
+
+$ yarn add vuex-composition-helpers
+
+$ pnpm install vuex-composition-helpers
 ```
 
-For Vue 3.x - use the `next` tag:
+### For Vue ^2.7 - 1.2.x
+```shell
+$ npm install vuex-composition-helpers@1.2.0
+
+$ yarn add vuex-composition-helpers@1.2.0
+
+$ pnpm install vuex-composition-helpers@1.2.0
+```
+
+### For Vue 3.x - use the `next` tag:
 ```shell
 $ npm install vuex-composition-helpers@next
+
+$ yarn add vuex-composition-helpers@next
+
+$ pnpm install vuex-composition-helpers@next
 ```
 
 This library is not transpiled by default. Your project should transpile it, which makes the final build smaller and more tree-shakeable. Take a look at [transpiling](#transpiling).
