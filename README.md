@@ -266,10 +266,10 @@ When using `vue-cli`, use this instead
 module.exports = {
   ...
   chainWebpack: config => {
-    config
+    config.module
       .rule('ts')
-      .include
-      .add(/vuex-composition-helpers/)
+      .exclude
+      .add(/node_modules\/vuex-composition-helpers/)
   }
 }
 ```
